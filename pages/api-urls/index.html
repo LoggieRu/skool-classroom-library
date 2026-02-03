@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Build API URLs</title>
+
+  <style>
+    :root{
+      --n8n-blue:#0078FF;
+      --n8n-blue-dark:#0062CC;
+      --n8n-blue-light:#3395FF;
+      --n8n-teal:#00D4AA;
+      --n8n-purple:#7E58FF;
+      --n8n-orange:#FF6D5A;
+
+      --text-dark:#16181d;
+      --text-light:#586174;
+      --bg-soft:#f3f5f8;
+      --paper:#ffffff;
+      --shadow: 0 18px 60px rgba(0,0,0,0.15);
+      --radius: 20px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height:1.6;
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(0,212,170,0.20), transparent 50%),
+                  radial-gradient(1200px 800px at 80% 20%, rgba(126,88,255,0.18), transparent 55%),
+                  linear-gradient(135deg, var(--n8n-blue) 0%, var(--n8n-purple) 100%);
+      padding: 26px 16px 60px;
+      color: var(--text-dark);
+    }
+
+    /* "PDF-like" continuous sheet (no page breaks) */
+    .paper{
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--paper);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .paper-inner{
+      padding: 42px 34px 36px;
+      background:
+        linear-gradient(180deg, rgba(0,120,255,0.06), transparent 180px);
+    }
+
+    /* Sticky top mini-bar */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: rgba(255,255,255,0.80);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(22,24,29,0.06);
+      padding: 10px 14px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content: space-between;
+    }
+    .topbar .left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0,120,255,0.10);
+      color: var(--n8n-blue-dark);
+      font-weight: 700;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .topbar .title{
+      font-weight: 700;
+      font-size: 13px;
+      color: rgba(22,24,29,0.72);
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(22,24,29,0.10);
+      background: white;
+      cursor:pointer;
+      font-weight: 700;
+      font-size: 13px;
+      color: rgba(22,24,29,0.80);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,0.10); }
+    .btn:active{ transform: translateY(0px); box-shadow:none; }
+
+    /* Header */
+    .header{
+      text-align:center;
+      padding: 22px 0 18px;
+      animation: fadeIn 1s;
+    }
+    .header h1{
+      font-size: 44px;
+      margin: 10px 0 8px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, var(--n8n-blue), var(--n8n-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .subtitle{
+      font-size: 18px;
+      color: rgba(22,24,29,0.70);
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+    .branding{
+      display:inline-block;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0,120,255,0.12), rgba(126,88,255,0.12));
+      border: 1px solid rgba(0,120,255,0.15);
+    }
+    .brand-logo{
+      font-size: 20px;
+      font-weight: 900;
+      color: rgba(22,24,29,0.92);
+    }
+    .brand-tagline{
+      font-size: 14px;
+      margin-top: 4px;
+      color: rgba(22,24,29,0.70);
+      font-weight: 700;
+    }
+
+    /* Cards */
+    .card{
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 30px;
+      margin: 16px 0;
+      border: 1px solid rgba(22,24,29,0.06);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+      animation: slideUp .5s;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .card h2{
+      color: var(--n8n-blue);
+      margin-bottom: 18px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .card h3{
+      color: var(--n8n-blue-dark);
+      font-size: 18px;
+      margin: 12px 0 8px;
+      font-weight: 800;
+    }
+
+    /* Formula */
+    .formula{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap: 12px;
+      padding: 18px;
+      background: var(--bg-soft);
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .formula-part{
+      padding: 10px 18px;
+      border-radius: 10px;
+      color: white;
+      font-weight: 900;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+      letter-spacing: 0.02em;
+    }
+    .formula-part.base{ background: var(--n8n-blue); }
+    .formula-part.endpoint{ background: var(--n8n-purple); }
+    .formula-part.params{ background: var(--n8n-teal); }
+    .formula-plus{ font-size: 20px; color: var(--n8n-blue); font-weight: 900; }
+
+    /* Breakdown */
+    .breakdown-item{
+      display:flex;
+      gap: 16px;
+      margin: 14px 0;
+      padding: 16px;
+      background: var(--bg-soft);
+      border-radius: 14px;
+      border-left: 6px solid var(--n8n-blue);
+    }
+    .number{
+      background: var(--n8n-blue);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 18px;
+      font-weight: 900;
+      flex-shrink:0;
+      box-shadow: 0 10px 22px rgba(0,120,255,0.25);
+    }
+    .breakdown-content{ flex:1; }
+    .description{
+      color: var(--text-light);
+      font-style: italic;
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    /* Code */
+    code{
+      display:block;
+      background:#15171c;
+      color:#d6d8de;
+      padding: 14px 16px;
+      border-radius: 10px;
+      overflow-x:auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+      line-height: 1.55;
+      margin: 10px 0;
+    }
+
+    .tip code,
+    .breakdown-content code,
+    .step code{
+      display:inline;
+      padding: 2px 7px;
+      background:#f0f1f4;
+      color: var(--n8n-orange);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    code.wrong{
+      background:#fff0f0;
+      color:#a70000;
+      border-left: 4px solid #ff2a2a;
+    }
+    code.correct{
+      background:#effff2;
+      color:#0b6a1a;
+      border-left: 4px solid #20c04d;
+    }
+
+    /* Example blocks */
+    .example-box{
+      padding: 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+    .example-box.wrong{
+      background:#fff5f5;
+      border-left: 6px solid #ff2a2a;
+    }
+    .example-box.correct{
+      background:#f0fff4;
+      border-left: 6px solid #20c04d;
+    }
+    .example-label{
+      font-weight: 900;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+    .arrow-down{
+      text-align:center;
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--n8n-blue);
+      margin: 14px 0;
+    }
+    .returns{
+      margin-top: 14px;
+      padding: 14px;
+      background: var(--bg-soft);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(22,24,29,0.84);
+    }
+
+    /* URL Builder */
+    .url-builder{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap: 16px;
+      margin: 18px 0 0;
+      padding: 18px;
+      background: var(--bg-soft);
+      border-radius: 14px;
+    }
+    .url-part{
+      padding: 16px 18px;
+      border-radius: 16px;
+      text-align:center;
+      min-width: 220px;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+      transition: transform .18s ease;
+    }
+    .url-part:hover{ transform: translateY(-4px); }
+    .base-part{ background: var(--n8n-blue); color: white; }
+    .endpoint-part{ background: var(--n8n-purple); color: white; }
+    .params-part{ background: var(--n8n-teal); color: white; }
+    .part-label{
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+      opacity: 0.92;
+    }
+    .part-content{
+      font-size: 14px;
+      font-weight: 800;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+    .url-plus{
+      font-size: 30px;
+      font-weight: 1000;
+      color: var(--n8n-blue);
+    }
+
+    /* Tips */
+    .tip{
+      padding: 14px;
+      margin: 10px 0;
+      background: var(--bg-soft);
+      border-left: 4px solid var(--n8n-orange);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    /* Mistake box */
+    .mistake-box{
+      background: var(--bg-soft);
+      padding: 16px;
+      border-radius: 14px;
+      margin: 16px 0;
+      border-left: 6px solid var(--n8n-orange);
+    }
+
+    /* Final */
+    .final{
+      background: linear-gradient(135deg, var(--n8n-blue) 0%, var(--n8n-purple) 100%);
+      color:white;
+      text-align:center;
+      border: none;
+      box-shadow: 0 20px 70px rgba(0,0,0,0.18);
+    }
+    .final h2{
+      color:white;
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+    .final p{
+      color:white;
+      font-size: 16px;
+      font-weight: 750;
+    }
+    .final-formula{
+      background: rgba(255,255,255,0.20);
+      backdrop-filter: blur(10px);
+      padding: 14px 18px;
+      border-radius: 14px;
+      margin: 16px auto;
+      font-size: 18px;
+      font-weight: 1000;
+      display:inline-block;
+      border: 2px solid rgba(255,255,255,0.28);
+    }
+    .final-message{ margin-top: 14px; line-height: 1.9; }
+
+    /* Print to PDF (remove blue ink) */
+    @media print{
+      body{
+        background: white !important;
+        padding: 0 !important;
+      }
+      .paper{
+        box-shadow: none !important;
+        border-radius: 0 !important;
+      }
+      .topbar{ display:none !important; }
+      .card{
+        box-shadow: none !important;
+        border: 1px solid rgba(0,0,0,0.10) !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px){
+      .paper-inner{ padding: 26px 16px 20px; }
+      .header h1{ font-size: 32px; }
+      .formula, .url-builder{ flex-direction: column; }
+      .url-part{ min-width: 100%; }
+      .topbar .title{ display:none; }
+    }
+
+    @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+    @keyframes slideUp{ from{opacity:0; transform: translateY(18px)} to{opacity:1; transform: translateY(0)} }
+  </style>
+</head>
+
+<body>
+  <div class="paper">
+    <div class="topbar">
+      <div class="left">
+        <div class="pill">📄 PDF-style (scroll)</div>
+        <div class="title">How to Build API URLs — DeepLogic AIA</div>
+      </div>
+      <button class="btn" onclick="window.print()" title="Print / Save as PDF">🖨️ Print / PDF</button>
+    </div>
+
+    <div class="paper-inner">
+      <div class="header">
+        <h1>🌤️ How to Build API URLs</h1>
+        <p class="subtitle">Understanding URL Structure with Weather APIs</p>
+        <div class="branding">
+          <div class="brand-logo">🚀 DeepLogic AIA</div>
+          <div class="brand-tagline">n8n &amp; AI Automation Training</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📐 The Pattern</h2>
+        <div class="formula">
+          <span class="formula-part base">BASE_URL</span>
+          <span class="formula-plus">+</span>
+          <span class="formula-part endpoint">ENDPOINT</span>
+          <span class="formula-plus">+</span>
+          <span class="formula-part params">PARAMETERS</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🔨 Breaking It Down</h2>
+
+        <div class="breakdown-item">
+          <div class="number">1</div>
+          <div class="breakdown-content">
+            <h3>BASE URL (The Foundation)</h3>
+            <code>https://api.openweathermap.org/data/2.5</code>
+            <p class="description">This is like your house address - it never changes</p>
+          </div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="number">2</div>
+          <div class="breakdown-content">
+            <h3>ENDPOINT (What you want)</h3>
+            <code>/weather</code>
+            <p class="description">This tells the API what data you want (weather, forecast, etc.)</p>
+          </div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="number">3</div>
+          <div class="breakdown-content">
+            <h3>PARAMETERS (Specific details)</h3>
+            <code>?q={city}&amp;appid={your_key}</code>
+            <p class="description">The stuff in {} brackets gets REPLACED with real values</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>💡 Real Example: Get Tauranga Weather</h2>
+
+        <div class="example-box wrong">
+          <div class="example-label">❌ What you see in docs:</div>
+          <code>GET /weather?q={city}&amp;appid={API_key}</code>
+        </div>
+
+        <div class="arrow-down">↓ REPLACE the {} parts ↓</div>
+
+        <div class="example-box correct">
+          <div class="example-label">✅ What you ACTUALLY build:</div>
+          <code>https://api.openweathermap.org/data/2.5/weather?q=Tauranga&amp;appid=your_key_here</code>
+        </div>
+
+        <p class="returns"><strong>Returns:</strong> Temperature, humidity, wind speed for Tauranga! 🌊</p>
+      </div>
+
+      <div class="card">
+        <h2>🎨 Visual Breakdown</h2>
+        <div class="url-builder">
+          <div class="url-part base-part">
+            <div class="part-label">BASE URL</div>
+            <div class="part-content">api.openweathermap.org/data/2.5</div>
+          </div>
+          <div class="url-plus">+</div>
+          <div class="url-part endpoint-part">
+            <div class="part-label">ENDPOINT</div>
+            <div class="part-content">/weather</div>
+          </div>
+          <div class="url-plus">+</div>
+          <div class="url-part params-part">
+            <div class="part-label">PARAMETERS</div>
+            <div class="part-content">?q=Tauranga&amp;appid=KEY</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎯 More Examples</h2>
+
+        <div class="api-box">
+          <h3>Get Auckland weather:</h3>
+          <code>...2.5/weather?q=Auckland&amp;appid=KEY</code>
+        </div>
+
+        <div class="api-box">
+          <h3>Get 5-day forecast:</h3>
+          <code>...2.5/forecast?q=Tauranga&amp;appid=KEY</code>
+        </div>
+
+        <div class="api-box">
+          <h3>Get by coordinates (lat/lon):</h3>
+          <code>...2.5/weather?lat=-37.68&amp;lon=176.17&amp;appid=KEY</code>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🔄 Using Weather APIs in n8n Workflows</h2>
+        <p class="insight">Here’s how to set up an HTTP Request node using OpenWeatherMap:</p>
+
+        <div class="workflow">
+          <div class="node">Trigger</div>
+          <div class="arrow">→</div>
+          <div class="node">HTTP Request</div>
+          <div class="arrow">→</div>
+          <div class="node">Process Data</div>
+        </div>
+
+        <div class="steps">
+          <h3>HTTP Request Node Settings:</h3>
+          <div class="step"><strong>Method:</strong> GET</div>
+          <div class="step"><strong>URL:</strong> https://api.openweathermap.org/data/2.5/weather</div>
+          <div class="step"><strong>Query Parameters:</strong>
+            <br />• q = {{$json.city}} <em>(example: "Tauranga")</em>
+            <br />• units = metric
+            <br />• appid = {{$env.OPENWEATHER_API_KEY}} <em>(recommended)</em>
+          </div>
