@@ -6,91 +6,100 @@
   <title>DeepLogic AIA — Skool Classroom Library</title>
 
   <style>
+    /* -------------------------------------------------------
+     DeepLogic AIA - Skool Classroom Library (Dark Aurora + Glow)
+     ------------------------------------------------------- */
+
     :root{
-      --blue:#0055ff;
-      --cyan:#00ddff;
-      --pink:#ff2244;
+      /* Core blues (NO green tint) */
+      --bg-0:#000814;         /* deepest navy */
+      --bg-1:#001d3d;         /* deep blue */
+      --bg-2:#003566;         /* royal blue */
 
-      --ink:#eaf0ff;
-      --muted:rgba(234,240,255,0.72);
+      /* Accents */
+      --blue:#0077ff;
+      --cyan:#00b4ff;
+      --purple:#7E58FF;
+      --red:#ff2244;
 
-      --paper: rgba(255,255,255,0.92);
-      --paper-solid:#ffffff;
+      /* UI */
+      --text:#f5f7ff;
+      --muted:#a6b0d4;
 
-      --stroke: rgba(255,255,255,0.14);
-      --stroke-dark: rgba(10,18,40,0.10);
+      --card: rgba(5, 15, 35, 0.78);
+      --card-2: rgba(0, 29, 61, 0.55);
+      --stroke: rgba(0,180,255,0.18);
+      --stroke-2: rgba(0,120,255,0.28);
 
-      --shadow: 0 26px 90px rgba(0,0,0,0.55);
-      --shadow-soft: 0 14px 40px rgba(0,0,0,0.22);
+      --shadow: 0 28px 90px rgba(0,0,0,0.70);
+      --shadow-soft: 0 18px 55px rgba(0,0,0,0.45);
 
-      --radius: 22px;
+      --radius: 26px;
+      --radius-2: 22px;
     }
 
     *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%}
 
     body{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
-      min-height: 100vh;
-      color: var(--ink);
-      padding: 26px 16px 70px;
+      background: linear-gradient(135deg, var(--bg-0) 0%, var(--bg-1) 50%, var(--bg-2) 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, sans-serif;
+      color: var(--text);
       overflow-x: hidden;
-
-      /* DARK blue background */
-      background:
-        radial-gradient(circle at 50% 20%,
-          rgba(0,85,255,0.30) 0%,
-          rgba(0,55,150,0.22) 30%,
-          rgba(5,15,35,0.92) 60%,
-          rgba(0,0,0,1) 100%),
-        linear-gradient(180deg,#020510 0%,#051535 70%,#010408 100%);
-      background-attachment: fixed;
+      position: relative;
     }
 
-    /* Aurora + subtle hex lines */
+    /* Aurora glows (kept BLUE/PURPLE only) */
     body::before,
     body::after{
       content:"";
       position: fixed;
-      inset: 0;
+      inset:0;
       pointer-events:none;
       z-index:-1;
     }
 
     body::before{
       background:
-        radial-gradient(circle at 30% 55%, rgba(0,221,255,0.22), transparent 58%),
-        radial-gradient(circle at 75% 35%, rgba(255,34,68,0.16), transparent 62%);
+        radial-gradient(circle at 18% 60%, rgba(0,119,255,0.34), transparent 58%),
+        radial-gradient(circle at 78% 20%, rgba(126,88,255,0.22), transparent 60%);
       filter: blur(140px);
-      animation: aurora 10s ease-in-out infinite alternate;
-      opacity: 0.9;
+      animation: drift1 10s infinite alternate ease-in-out;
+      opacity: 0.95;
     }
 
     body::after{
-      background-image:
-        repeating-linear-gradient(60deg,
-          transparent 0px,
-          transparent 22px,
-          rgba(0,221,255,0.05) 22px,
-          rgba(0,221,255,0.05) 23px);
-      opacity: 0.35;
+      background:
+        radial-gradient(circle at 70% 55%, rgba(0,180,255,0.22), transparent 60%),
+        radial-gradient(circle at 35% 20%, rgba(0,85,255,0.20), transparent 65%),
+        repeating-linear-gradient(60deg, transparent 0px, transparent 20px, rgba(0,119,255,0.05) 20px, rgba(0,119,255,0.05) 21px);
+      filter: blur(160px);
+      animation: drift2 12s infinite alternate ease-in-out;
+      opacity: 0.9;
     }
 
-    @keyframes aurora{
-      0%{ transform: translate(-35px,-25px) scale(1.05); }
-      100%{ transform: translate(35px,25px) scale(1.18); }
+    @keyframes drift1{
+      0%{transform: translate(-40px,-50px) scale(1); opacity:0.85;}
+      100%{transform: translate(40px,50px) scale(1.25); opacity:1;}
+    }
+    @keyframes drift2{
+      0%{transform: translate(55px,-30px) scale(1.2); opacity:0.75;}
+      100%{transform: translate(-55px,30px) scale(1); opacity:1;}
     }
 
     .wrap{
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
+      padding: 28px 16px 70px;
     }
 
+    /* Header row */
     .topbar{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 14px;
+      margin-bottom: 18px;
     }
 
     .brand{
@@ -107,76 +116,101 @@
       font-weight: 900;
       letter-spacing: 0.02em;
       font-size: 14px;
-      color: rgba(234,240,255,0.92);
-      opacity: 0.95;
-      text-shadow: 0 8px 26px rgba(0,0,0,0.45);
+      color: rgba(245,247,255,0.88);
+      white-space: nowrap;
     }
 
     .brand h1{
-      font-size: 36px;
+      font-size: 40px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
       font-weight: 1000;
-      letter-spacing: -0.03em;
-      line-height: 1.08;
-      text-shadow: 0 14px 40px rgba(0,0,0,0.55);
+      background: linear-gradient(135deg, var(--cyan), var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(0,119,255,0.35);
     }
 
     .brand p{
-      font-size: 15px;
-      font-weight: 750;
-      opacity: 0.92;
-      color: rgba(234,240,255,0.85);
+      color: rgba(245,247,255,0.82);
+      font-weight: 700;
+      font-size: 14px;
     }
 
-    /* “Hosted” pill with lava accent */
     .pill{
       display:inline-flex;
       align-items:center;
-      gap: 8px;
+      gap: 10px;
       padding: 10px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      backdrop-filter: blur(14px);
-      color: rgba(255,255,255,0.92);
+      background: rgba(0,180,255,0.10);
+      border: 1px solid rgba(0,180,255,0.22);
+      backdrop-filter: blur(12px);
+      color: rgba(245,247,255,0.90);
       font-weight: 900;
       font-size: 13px;
       white-space: nowrap;
-
-      background:
-        linear-gradient(135deg, rgba(0,221,255,0.18), rgba(0,85,255,0.12)),
-        rgba(255,255,255,0.08);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.30);
     }
 
-    .paper{
-      border-radius: 28px;
+    /* Main glass panel */
+    .panel{
+      background: rgba(5, 15, 35, 0.55);
+      border: 1px solid rgba(0,221,255,0.14);
+      border-radius: 34px;
       box-shadow: var(--shadow);
+      backdrop-filter: blur(28px);
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.16);
-
-      /* glass over dark bg */
-      background: rgba(255,255,255,0.10);
-      backdrop-filter: blur(18px);
+      position: relative;
     }
 
-    .paper-inner{
-      padding: 26px;
-      background: linear-gradient(180deg, rgba(0,221,255,0.10), transparent 220px);
+    .panel::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, rgba(0,180,255,0.35), rgba(0,119,255,0.25), rgba(126,88,255,0.25));
+      opacity: 0.12;
+      pointer-events:none;
+    }
+
+    .panel-inner{
+      position: relative;
+      padding: 22px;
+    }
+
+    /* “Luminating blocks” like your form card */
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 2px solid rgba(0,119,255,0.26);
+      box-shadow:
+        0 26px 80px rgba(0,0,0,0.60),
+        0 0 42px rgba(0,119,255,0.18),
+        inset 0 1px 1px rgba(255,255,255,0.08);
+      backdrop-filter: blur(26px);
+      position: relative;
+      transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    }
+
+    .card:hover{
+      transform: translateY(-6px);
+      border-color: rgba(0,180,255,0.45);
+      box-shadow:
+        0 34px 95px rgba(0,119,255,0.22),
+        0 0 70px rgba(0,180,255,0.26),
+        0 0 40px rgba(126,88,255,0.18);
     }
 
     .hero{
       display:grid;
-      grid-template-columns: 1.3fr 0.7fr;
+      grid-template-columns: 1.35fr 0.65fr;
       gap: 14px;
-      align-items: stretch;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .card{
-      background: var(--paper);
-      border: 1px solid rgba(10,18,40,0.08);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-soft);
-      padding: 18px;
-      color: rgba(10,18,40,0.92);
+    .welcome{
+      padding: 18px 18px 16px;
     }
 
     .welcome h2{
@@ -184,20 +218,22 @@
       font-weight: 1000;
       letter-spacing: -0.01em;
       margin-bottom: 8px;
-      color: rgba(10,18,40,0.92);
+      color: rgba(245,247,255,0.95);
     }
 
     .welcome p{
-      color: rgba(10,18,40,0.68);
+      color: rgba(166,176,212,0.92);
       font-weight: 700;
       line-height: 1.6;
+      font-size: 14px;
     }
 
     .status{
+      padding: 16px;
       display:flex;
       flex-direction:column;
       gap: 10px;
-      justify-content: center;
+      justify-content:center;
     }
 
     .badge{
@@ -207,23 +243,17 @@
       gap: 10px;
       padding: 12px 14px;
       border-radius: 16px;
-      background: rgba(10,18,40,0.05);
-      border: 1px solid rgba(10,18,40,0.08);
+      background: rgba(0,180,255,0.08);
+      border: 1px solid rgba(0,180,255,0.16);
+      color: rgba(245,247,255,0.88);
       font-weight: 900;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.28);
     }
 
-    .badge span{
-      color: rgba(10,18,40,0.78);
-      font-size: 13px;
-      font-weight: 900;
-    }
+    .badge span{font-size: 13px; opacity:0.9;}
+    .badge strong{font-size: 13px; opacity:0.75; font-weight: 900;}
 
-    .badge strong{
-      font-size: 13px;
-      color: rgba(10,18,40,0.55);
-      font-weight: 900;
-    }
-
+    /* Tiles grid */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
@@ -232,35 +262,24 @@
     }
 
     .tile{
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius);
-      border: 1px solid rgba(10,18,40,0.10);
-      background: var(--paper-solid);
-      box-shadow: var(--shadow-soft);
-      padding: 18px;
-      transition: transform .15s ease, box-shadow .15s ease;
-      text-decoration: none;
-      color: rgba(10,18,40,0.92);
-      min-height: 160px;
-    }
-
-    .tile:hover{
-      transform: translateY(-3px);
-      box-shadow: 0 18px 46px rgba(0,0,0,0.20);
+      display:block;
+      text-decoration:none;
+      color: inherit;
+      padding: 16px;
     }
 
     .tile .icon{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
       display:flex;
       align-items:center;
       justify-content:center;
       font-size: 20px;
       font-weight: 900;
+      color: #fff;
       margin-bottom: 10px;
-      color: white;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
     }
 
     .tile h3{
@@ -268,104 +287,115 @@
       font-weight: 1000;
       margin-bottom: 6px;
       letter-spacing: -0.01em;
+      color: rgba(245,247,255,0.95);
     }
 
     .tile p{
-      color: rgba(10,18,40,0.68);
+      color: rgba(166,176,212,0.92);
       font-weight: 700;
       line-height: 1.55;
       font-size: 13px;
     }
 
-    /* CTA block inside white card */
+    /* Icon gradients (no green) */
+    .g-blue{ background: linear-gradient(135deg, var(--blue), var(--cyan)); }
+    .g-purple{ background: linear-gradient(135deg, var(--purple), #a08bff); }
+    .g-cyan{ background: linear-gradient(135deg, var(--cyan), #2fd0ff); }
+    .g-red{ background: linear-gradient(135deg, var(--red), #ff5b7a); }
+
+    /* CTA strip */
     .cta{
-      margin-top: 16px;
-      display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items:center;
-      justify-content: space-between;
+      margin-top: 14px;
       padding: 14px 16px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, rgba(0,221,255,0.12), rgba(0,85,255,0.10));
-      border: 1px solid rgba(0,85,255,0.10);
+      border-radius: 20px;
+      background: rgba(0,180,255,0.08);
+      border: 1px solid rgba(0,180,255,0.16);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      box-shadow: 0 18px 55px rgba(0,0,0,0.35);
     }
 
     .cta .left{
       display:flex;
       flex-direction:column;
       gap: 2px;
-      color: rgba(10,18,40,0.90);
     }
 
     .cta .left strong{
       font-weight: 1000;
       letter-spacing: -0.01em;
+      color: rgba(245,247,255,0.95);
     }
 
     .cta .left span{
-      color: rgba(10,18,40,0.66);
-      font-weight: 750;
+      color: rgba(166,176,212,0.92);
+      font-weight: 700;
       font-size: 13px;
     }
 
-    /* Lava-lamp button accent */
-    .btn{
+    /* Lava button (blue→pink/red animated) */
+    .btn-lava{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap: 8px;
-      padding: 10px 14px;
+      height: 44px;
+      padding: 0 16px;
       border-radius: 14px;
-      border: 1px solid rgba(10,18,40,0.10);
-      cursor: pointer;
-      font-weight: 1000;
+      border: 1px solid rgba(0,221,255,0.22);
+      color: #fff;
+      font-weight: 900;
       font-size: 13px;
-      text-decoration: none;
-      color: white;
+      text-decoration:none;
+      cursor:pointer;
 
-      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--pink));
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--red));
       background-size: 200% 200%;
-      box-shadow: 0 14px 40px rgba(0,85,255,0.25), 0 0 26px rgba(255,34,68,0.18);
-      transition: transform .12s ease, box-shadow .12s ease;
+      box-shadow: 0 0 40px rgba(0,221,255,0.30), 0 0 22px rgba(255,34,68,0.20);
+      transition: transform .2s ease, box-shadow .2s ease;
       animation: moveGradient 6s ease infinite;
+      position: relative;
+      overflow: hidden;
     }
 
-    .btn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 18px 54px rgba(0,221,255,0.22), 0 0 34px rgba(255,34,68,0.24);
+    .btn-lava:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 0 65px rgba(0,221,255,0.42), 0 0 30px rgba(255,34,68,0.30);
     }
 
     @keyframes moveGradient{
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0%{background-position: 0% 50%;}
+      50%{background-position: 100% 50%;}
+      100%{background-position: 0% 50%;}
     }
 
+    /* Footer note */
     .footer{
-      margin-top: 18px;
-      padding: 18px;
+      margin-top: 14px;
+      padding: 16px;
       border-radius: 22px;
-      background: linear-gradient(135deg, rgba(0,221,255,0.10), rgba(255,34,68,0.08));
-      border: 1px solid rgba(0,221,255,0.10);
-      color: rgba(10,18,40,0.72);
-      font-weight: 750;
+      background: rgba(0,119,255,0.07);
+      border: 1px solid rgba(0,119,255,0.14);
+      color: rgba(166,176,212,0.95);
+      font-weight: 700;
       font-size: 13px;
       line-height: 1.6;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.32);
     }
 
-    /* Icon gradients */
-    .g-blue{ background: linear-gradient(135deg, var(--blue), #2f92ff); }
-    .g-cyan{ background: linear-gradient(135deg, var(--cyan), #6cf0ff); }
-    .g-pink{ background: linear-gradient(135deg, var(--pink), #ff6a86); }
-
-    @media (max-width: 950px){
-      .grid{ grid-template-columns: repeat(2, 1fr); }
-      .hero{ grid-template-columns: 1fr; }
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero{grid-template-columns: 1fr;}
+      .grid{grid-template-columns: repeat(2, 1fr);}
+      .brand h1{font-size: 34px;}
     }
+
     @media (max-width: 560px){
-      .grid{ grid-template-columns: 1fr; }
-      .brand h1{ font-size: 28px; }
+      .grid{grid-template-columns: 1fr;}
+      .topbar{flex-direction:column; align-items:flex-start;}
+      .pill{align-self:flex-start;}
     }
   </style>
 </head>
@@ -374,15 +404,15 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="kicker">🚀 DeepLogic AIA <span style="opacity:.75;">•</span> n8n & AI Automation Training</div>
+        <div class="kicker">🚀 DeepLogic AIA <span style="opacity:.7;">•</span> n8n & AI Automation Training</div>
         <h1>Skool Classroom Library</h1>
         <p>AI & Automation Theory • Clean, shareable lesson pages • No logins</p>
       </div>
       <div class="pill">✅ Hosted on GitHub Pages</div>
     </div>
 
-    <div class="paper">
-      <div class="paper-inner">
+    <div class="panel">
+      <div class="panel-inner">
 
         <div class="hero">
           <div class="card welcome">
@@ -401,37 +431,39 @@
         </div>
 
         <div class="grid">
-          <a class="tile" href="./pages/api-urls/">
+          <!-- LIVE LINK -->
+          <a class="card tile" href="./pages/api-urls/">
             <div class="icon g-blue">☁️</div>
             <h3>API URL Builder (Weather)</h3>
             <p>Learn the URL pattern: BASE + ENDPOINT + PARAMETERS. Includes examples and n8n HTTP Request setup.</p>
           </a>
 
-          <a class="tile" href="./pages/http-basics/">
-            <div class="icon g-cyan">🌐</div>
+          <!-- PLACEHOLDERS (create later) -->
+          <a class="card tile" href="./pages/http-basics/">
+            <div class="icon g-purple">🌐</div>
             <h3>HTTP Basics</h3>
             <p>Methods, headers, query params, auth types. (Create: pages/http-basics/index.html)</p>
           </a>
 
-          <a class="tile" href="./pages/json-basics/">
-            <div class="icon g-pink">🧩</div>
+          <a class="card tile" href="./pages/json-basics/">
+            <div class="icon g-cyan">🧩</div>
             <h3>JSON Basics</h3>
             <p>JSON structure, arrays/objects, common patterns for automations. (Create: pages/json-basics/index.html)</p>
           </a>
 
-          <a class="tile" href="./pages/n8n-workflows/">
-            <div class="icon g-cyan">⚙️</div>
+          <a class="card tile" href="./pages/n8n-workflows/">
+            <div class="icon g-red">⚙️</div>
             <h3>n8n Workflows</h3>
             <p>Workflow patterns, reusable templates, best practices. (Create: pages/n8n-workflows/index.html)</p>
           </a>
 
-          <a class="tile" href="./pages/make-concepts/">
-            <div class="icon g-pink">🧠</div>
+          <a class="card tile" href="./pages/make-concepts/">
+            <div class="icon g-purple">🧠</div>
             <h3>Make Concepts</h3>
             <p>Scenarios, routers, error handling, data mapping. (Create: pages/make-concepts/index.html)</p>
           </a>
 
-          <a class="tile" href="./pages/ai-automation-theory/">
+          <a class="card tile" href="./pages/ai-automation-theory/">
             <div class="icon g-blue">📚</div>
             <h3>AI & Automation Theory</h3>
             <p>Evergreen theory and mental models that apply to any tool. (Create: pages/ai-automation-theory/index.html)</p>
@@ -443,11 +475,11 @@
             <strong>Next: add more pages</strong>
             <span>Create a folder + index.html → it becomes a new button destination.</span>
           </div>
-          <a class="btn" href="./pages/api-urls/">Open API Lesson</a>
+          <a class="btn-lava" href="./pages/api-urls/">Open API Lesson</a>
         </div>
 
         <div class="footer">
-          <div><strong>📚 DeepLogic AIA – Start Building Today!</strong></div>
+          <div><strong>📚 DeepLogic AIA — Start Building Today!</strong></div>
           <div>For questions or support, please refer to the community admin.</div>
           <div>Special thanks to the collaboration between DeepLogic AI and The AI Skills Forge.</div>
           <div>Presented by The AI Skills Forge, thanks to the official n8n program.</div>
