@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Build API URLs</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Build API URLs — DeepLogic AIA</title>
 
   <style>
     /* n8n-inspired color palette */
@@ -92,6 +92,8 @@
       font-size: 13px;
       color: rgba(0,0,0,0.78);
       transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+      user-select: none;
     }
     .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,0.12); }
     .btn:active { transform: translateY(0px); box-shadow: none; }
@@ -336,4 +338,384 @@
       font-family: 'Courier New', monospace;
     }
 
-    .url-plus { font-size: 2.
+    .url-plus {
+      font-size: 2.5em;
+      font-weight: 900;
+      color: var(--n8n-blue);
+    }
+
+    /* API Box */
+    .api-box {
+      background: var(--bg-light);
+      padding: 20px;
+      border-radius: 12px;
+      margin: 15px 0;
+      border-left: 5px solid var(--n8n-teal);
+    }
+
+    /* Steps */
+    .steps {
+      background: var(--bg-light);
+      padding: 25px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .step {
+      padding: 12px;
+      margin: 10px 0;
+      background: white;
+      border-left: 4px solid var(--n8n-blue);
+      border-radius: 6px;
+      font-size: 1.05em;
+    }
+
+    /* Insight */
+    .insight {
+      background: linear-gradient(135deg, var(--n8n-blue-light) 0%, var(--n8n-blue) 100%);
+      color: white;
+      padding: 18px 25px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 1.1em;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(0,120,255,0.3);
+    }
+
+    /* Workflow Styles */
+    .workflow {
+      text-align: center;
+      padding: 25px;
+      background: var(--bg-light);
+      border-radius: 12px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .node {
+      background: var(--n8n-blue);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 12px;
+      display: inline-block;
+      font-weight: 700;
+      font-size: 1.1em;
+      box-shadow: 0 4px 15px rgba(0,120,255,0.3);
+      transition: all 0.3s;
+    }
+
+    .node:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,120,255,0.4);
+    }
+
+    .arrow {
+      font-size: 2em;
+      color: var(--n8n-blue);
+      font-weight: 900;
+    }
+
+    /* Pro Tips */
+    .tip {
+      padding: 15px;
+      margin: 12px 0;
+      background: var(--bg-light);
+      border-left: 4px solid var(--n8n-orange);
+      border-radius: 8px;
+      font-size: 1.05em;
+    }
+
+    /* Mistake Box */
+    .mistake-box {
+      background: var(--bg-light);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-left: 5px solid var(--n8n-orange);
+    }
+
+    /* Final Card */
+    .final {
+      background: linear-gradient(135deg, var(--n8n-blue) 0%, var(--n8n-purple) 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .final h2 { color: white; font-size: 2.5em; }
+    .final p { color: white; font-size: 1.2em; }
+
+    .final-formula {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 20px 30px;
+      border-radius: 12px;
+      margin: 25px auto;
+      font-size: 1.5em;
+      font-weight: 900;
+      display: inline-block;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .final-message { margin-top: 30px; line-height: 2; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 35px;
+      background: linear-gradient(135deg, var(--n8n-blue-dark) 0%, var(--n8n-purple) 100%);
+      color: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .footer-logo {
+      font-size: 2em;
+      font-weight: 900;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .footer-text { font-size: 1.3em; margin: 10px 0; font-weight: 500; }
+
+    .footer-cta {
+      font-size: 1.5em;
+      font-weight: 900;
+      margin-top: 15px;
+      color: var(--n8n-teal);
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+    }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 2em; }
+      .formula, .url-builder { flex-direction: column; }
+      .url-part { min-width: 100%; }
+      .workflow { flex-direction: column; }
+      .topbar { position: static; }
+    }
+
+    /* Print/PDF: remove gradients + keep ink-friendly */
+    @media print {
+      body { background: white !important; padding: 0 !important; }
+      .topbar { display: none !important; }
+      .header { color: #000 !important; text-shadow: none !important; }
+      .branding { background: #fff !important; border: 1px solid #ddd !important; }
+      .card { box-shadow: none !important; border: 1px solid #e5e5e5 !important; }
+      code { background: #f3f3f3 !important; color: #111 !important; }
+      .final { background: #fff !important; color: #000 !important; }
+      .final h2, .final p { color: #000 !important; }
+      .footer { background: #fff !important; color: #000 !important; box-shadow: none !important; border: 1px solid #e5e5e5 !important; }
+      .footer-cta { color: #000 !important; text-shadow: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="topbar">
+      <div class="left">
+        <div class="pill">📄 PDF-style (scroll)</div>
+        <div class="title">How to Build API URLs — DeepLogic AIA</div>
+      </div>
+      <div class="right" style="display:flex;gap:10px;align-items:center;">
+        <a class="btn" href="/skool-classroom-library/">🏠 Back to Library</a>
+        <button class="btn" onclick="window.print()">🖨️ Print / PDF</button>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+      <h1>🌤️ How to Build API URLs</h1>
+      <p class="subtitle">Understanding URL Structure with Weather APIs</p>
+      <div class="branding">
+        <div class="brand-logo">🚀 DeepLogic AIA</div>
+        <div class="brand-tagline">n8n & AI Automation Training</div>
+      </div>
+    </div>
+
+    <!-- The Pattern -->
+    <div class="card">
+      <h2>📐 The Pattern</h2>
+      <div class="formula">
+        <span class="formula-part base">BASE_URL</span>
+        <span class="formula-plus">+</span>
+        <span class="formula-part endpoint">ENDPOINT</span>
+        <span class="formula-plus">+</span>
+        <span class="formula-part params">PARAMETERS</span>
+      </div>
+    </div>
+
+    <!-- Breaking It Down -->
+    <div class="card">
+      <h2>🔨 Breaking It Down</h2>
+
+      <div class="breakdown-item">
+        <div class="number">1</div>
+        <div class="breakdown-content">
+          <h3>BASE URL (The Foundation)</h3>
+          <code>https://api.openweathermap.org/data/2.5</code>
+          <p class="description">This is like your house address — it never changes</p>
+        </div>
+      </div>
+
+      <div class="breakdown-item">
+        <div class="number">2</div>
+        <div class="breakdown-content">
+          <h3>ENDPOINT (What you want)</h3>
+          <code>/weather</code>
+          <p class="description">This tells the API what data you want (weather, forecast, etc.)</p>
+        </div>
+      </div>
+
+      <div class="breakdown-item">
+        <div class="number">3</div>
+        <div class="breakdown-content">
+          <h3>PARAMETERS (Specific details)</h3>
+          <code>?q={city}&amp;appid={your_key}</code>
+          <p class="description">The stuff in { } brackets gets REPLACED with real values</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real Example -->
+    <div class="card example-card">
+      <h2>💡 Real Example: Get Weather for Tauranga</h2>
+
+      <div class="example-box wrong">
+        <div class="example-label">❌ What you see in docs:</div>
+        <code>GET /weather?q={city}&amp;appid={API_key}</code>
+      </div>
+
+      <div class="arrow-down">↓ REPLACE the {} parts ↓</div>
+
+      <div class="example-box correct">
+        <div class="example-label">✅ What you ACTUALLY build:</div>
+        <code>https://api.openweathermap.org/data/2.5/weather?q=Tauranga&amp;appid=your_key_here</code>
+      </div>
+
+      <p class="returns"><strong>Returns:</strong> Temperature, humidity, wind speed for Tauranga! 🌊</p>
+    </div>
+
+    <!-- Visual Breakdown -->
+    <div class="card">
+      <h2>🎨 Visual Breakdown</h2>
+      <div class="url-builder">
+        <div class="url-part base-part">
+          <div class="part-label">BASE URL</div>
+          <div class="part-content">api.openweathermap.org/data/2.5</div>
+        </div>
+        <div class="url-plus">+</div>
+        <div class="url-part endpoint-part">
+          <div class="part-label">ENDPOINT</div>
+          <div class="part-content">/weather</div>
+        </div>
+        <div class="url-plus">+</div>
+        <div class="url-part params-part">
+          <div class="part-label">PARAMETERS</div>
+          <div class="part-content">?q=Tauranga&amp;appid=KEY</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- More Examples -->
+    <div class="card">
+      <h2>🎯 More Weather Examples</h2>
+      <div class="api-box">
+        <h3>Get Auckland weather:</h3>
+        <code>...2.5/weather?q=Auckland&amp;appid=KEY</code>
+      </div>
+      <div class="api-box">
+        <h3>Get 5-day forecast:</h3>
+        <code>...2.5/forecast?q=Tauranga&amp;appid=KEY</code>
+      </div>
+      <div class="api-box">
+        <h3>Get by coordinates (lat/lon):</h3>
+        <code>...2.5/weather?lat=-37.68&amp;lon=176.17&amp;appid=KEY</code>
+      </div>
+    </div>
+
+    <!-- n8n Workflow -->
+    <div class="card">
+      <h2>🔄 Using in n8n Workflows</h2>
+      <p class="insight">Here’s how to set up an HTTP Request node for a weather API:</p>
+
+      <div class="workflow">
+        <div class="node">Trigger</div>
+        <div class="arrow">→</div>
+        <div class="node">HTTP Request</div>
+        <div class="arrow">→</div>
+        <div class="node">Process Data</div>
+      </div>
+
+      <div class="steps">
+        <h3>HTTP Request Node Settings:</h3>
+        <div class="step"><strong>Method:</strong> GET</div>
+        <div class="step"><strong>URL:</strong> https://api.openweathermap.org/data/2.5/weather</div>
+        <div class="step"><strong>Query Parameters:</strong>
+          <br>• q = {{$json.city}}
+          <br>• appid = {{$json.weather_api_key}}
+        </div>
+        <div class="step"><strong>Authentication:</strong> Many APIs use an API key in query params or headers.</div>
+      </div>
+
+      <p class="insight">💡 Pro Tip: Use {{$json.fieldname}} to dynamically insert data from previous nodes!</p>
+    </div>
+
+    <!-- Pro Tips -->
+    <div class="card">
+      <h2>⚡ Pro Tips</h2>
+      <div class="tip">💾 In n8n: Use <code>{{$json.city}}</code> to insert data automatically</div>
+      <div class="tip">🔑 Keep your API key secret (don’t share in public!)</div>
+      <div class="tip">📋 URL parameters use <code>?</code> for first param, <code>&amp;</code> for additional ones</div>
+      <div class="tip">🌐 Spaces in URLs become <code>%20</code> (e.g., “New Zealand” → “New%20Zealand”)</div>
+    </div>
+
+    <!-- Common Mistakes -->
+    <div class="card">
+      <h2>⚠️ Common Mistakes to Avoid</h2>
+      <div class="mistake-box">
+        <h3>❌ Missing the ? before parameters</h3>
+        <code class="wrong">api.example.com/weathername=Auckland  // WRONG</code>
+        <code class="correct">api.example.com/weather?name=Auckland  // CORRECT</code>
+      </div>
+      <div class="mistake-box">
+        <h3>❌ Forgetting to replace {placeholder} values</h3>
+        <code class="wrong">...weather?q={city}&amp;appid={key}  // WRONG</code>
+        <code class="correct">...weather?q=Tauranga&amp;appid=abc123  // CORRECT</code>
+      </div>
+    </div>
+
+    <!-- Final Summary -->
+    <div class="card final">
+      <h2>🎉 You’ve Got This!</h2>
+      <p>Every API follows this same pattern:</p>
+      <div class="final-formula">
+        BASE_URL + ENDPOINT + ?parameters
+      </div>
+      <p class="final-message">
+        ✅ Master this and you can connect to ANY API in n8n!<br>
+        ✅ Weather APIs, CRMs, dashboards — everything!<br>
+        ✅ Start building powerful automations today!
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-logo">📚 DeepLogic AIA</div>
+      <div class="footer-text">n8n &amp; AI Automation Training</div>
+      <div class="footer-cta">Start Building Today!</div>
+    </div>
+
+  </div>
+</body>
+</html>
