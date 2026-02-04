@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How to Build API URLs — DeepLogic AIA</title>
+  <meta name="description" content="Learn the simple pattern to build API URLs (BASE URL + ENDPOINT + PARAMETERS) with weather API examples and n8n HTTP Request tips." />
 
   <style>
     /* n8n-inspired color palette */
@@ -24,7 +25,7 @@
     body {
       margin: 0;
       padding: 20px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: linear-gradient(135deg, var(--n8n-blue) 0%, var(--n8n-purple) 100%);
       min-height: 100vh;
       line-height: 1.6;
@@ -93,12 +94,11 @@
       color: rgba(0,0,0,0.78);
       transition: transform 0.15s, box-shadow 0.15s;
       text-decoration: none;
-      user-select: none;
     }
     .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,0.12); }
     .btn:active { transform: translateY(0px); box-shadow: none; }
 
-    /* Header Styles */
+    /* Header */
     .header {
       text-align: center;
       color: white;
@@ -144,7 +144,7 @@
       margin-top: 4px;
     }
 
-    /* Card Styles */
+    /* Card */
     .card {
       background: white;
       border-radius: 20px;
@@ -177,7 +177,7 @@
       font-weight: 700;
     }
 
-    /* Formula Styles */
+    /* Formula */
     .formula {
       display: flex;
       align-items: center;
@@ -209,7 +209,7 @@
       font-weight: 900;
     }
 
-    /* Breakdown Items */
+    /* Breakdown */
     .breakdown-item {
       display: flex;
       gap: 20px;
@@ -243,7 +243,7 @@
       margin-top: 8px;
     }
 
-    /* Code Styles */
+    /* Code */
     code {
       display: block;
       background: #1e1e1e;
@@ -251,15 +251,13 @@
       padding: 15px 20px;
       border-radius: 8px;
       overflow-x: auto;
-      font-family: 'Courier New', Monaco, monospace;
+      font-family: "Courier New", Monaco, monospace;
       font-size: 0.95em;
       line-height: 1.5;
       margin: 10px 0;
     }
 
-    .tip code,
-    .breakdown-content code,
-    .step code {
+    .tip code, .breakdown-content code, .step code {
       display: inline;
       padding: 3px 8px;
       background: #f0f0f0;
@@ -272,11 +270,10 @@
     code.wrong { background: #ffe6e6; color: #cc0000; border-left: 4px solid #ff0000; }
     code.correct { background: #e6ffe6; color: #006600; border-left: 4px solid #00cc00; }
 
-    /* Example Card Styles */
+    /* Example blocks */
     .example-box { padding: 20px; border-radius: 10px; margin: 15px 0; }
     .example-box.wrong { background: #fff5f5; border-left: 5px solid #ff0000; }
     .example-box.correct { background: #f0fff4; border-left: 5px solid #00cc00; }
-
     .example-label { font-weight: 900; margin-bottom: 10px; font-size: 1.1em; }
 
     .arrow-down {
@@ -316,7 +313,6 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.12);
       transition: transform 0.3s;
     }
-
     .url-part:hover { transform: translateY(-5px); }
 
     .base-part { background: var(--n8n-blue); color: white; }
@@ -331,20 +327,14 @@
       margin-bottom: 10px;
       opacity: 0.9;
     }
-
     .part-content {
       font-size: 1.1em;
       font-weight: 700;
-      font-family: 'Courier New', monospace;
+      font-family: "Courier New", monospace;
     }
+    .url-plus { font-size: 2.3em; font-weight: 900; color: var(--n8n-blue); }
 
-    .url-plus {
-      font-size: 2.5em;
-      font-weight: 900;
-      color: var(--n8n-blue);
-    }
-
-    /* API Box */
+    /* API example boxes */
     .api-box {
       background: var(--bg-light);
       padding: 20px;
@@ -370,19 +360,7 @@
       font-size: 1.05em;
     }
 
-    /* Insight */
-    .insight {
-      background: linear-gradient(135deg, var(--n8n-blue-light) 0%, var(--n8n-blue) 100%);
-      color: white;
-      padding: 18px 25px;
-      border-radius: 10px;
-      margin: 20px 0;
-      font-size: 1.1em;
-      font-weight: 700;
-      box-shadow: 0 4px 15px rgba(0,120,255,0.3);
-    }
-
-    /* Workflow Styles */
+    /* Workflow */
     .workflow {
       text-align: center;
       padding: 25px;
@@ -403,23 +381,12 @@
       border-radius: 12px;
       display: inline-block;
       font-weight: 700;
-      font-size: 1.1em;
+      font-size: 1.05em;
       box-shadow: 0 4px 15px rgba(0,120,255,0.3);
-      transition: all 0.3s;
     }
+    .arrow { font-size: 2em; color: var(--n8n-blue); font-weight: 900; }
 
-    .node:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,120,255,0.4);
-    }
-
-    .arrow {
-      font-size: 2em;
-      color: var(--n8n-blue);
-      font-weight: 900;
-    }
-
-    /* Pro Tips */
+    /* Tips */
     .tip {
       padding: 15px;
       margin: 12px 0;
@@ -429,7 +396,7 @@
       font-size: 1.05em;
     }
 
-    /* Mistake Box */
+    /* Mistakes */
     .mistake-box {
       background: var(--bg-light);
       padding: 20px;
@@ -438,15 +405,14 @@
       border-left: 5px solid var(--n8n-orange);
     }
 
-    /* Final Card */
+    /* Final card */
     .final {
       background: linear-gradient(135deg, var(--n8n-blue) 0%, var(--n8n-purple) 100%);
       color: white;
       text-align: center;
     }
-
-    .final h2 { color: white; font-size: 2.5em; }
-    .final p { color: white; font-size: 1.2em; }
+    .final h2 { color: white; font-size: 2.3em; }
+    .final p { color: white; font-size: 1.15em; }
 
     .final-formula {
       background: rgba(255,255,255,0.2);
@@ -460,35 +426,19 @@
       border: 2px solid rgba(255,255,255,0.3);
     }
 
-    .final-message { margin-top: 30px; line-height: 2; }
-
     /* Footer */
     .footer {
       text-align: center;
-      margin-top: 40px;
-      padding: 35px;
+      margin-top: 30px;
+      padding: 28px;
       background: linear-gradient(135deg, var(--n8n-blue-dark) 0%, var(--n8n-purple) 100%);
       color: white;
       border-radius: 20px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     }
-
-    .footer-logo {
-      font-size: 2em;
-      font-weight: 900;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-    }
-
-    .footer-text { font-size: 1.3em; margin: 10px 0; font-weight: 500; }
-
-    .footer-cta {
-      font-size: 1.5em;
-      font-weight: 900;
-      margin-top: 15px;
-      color: var(--n8n-teal);
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-    }
+    .footer-logo { font-size: 1.8em; font-weight: 900; margin-bottom: 8px; }
+    .footer-text { font-size: 1.15em; margin: 6px 0; font-weight: 500; opacity: 0.95; }
+    .footer-cta { font-size: 1.2em; font-weight: 900; margin-top: 10px; color: var(--n8n-teal); }
 
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -500,21 +450,15 @@
       .formula, .url-builder { flex-direction: column; }
       .url-part { min-width: 100%; }
       .workflow { flex-direction: column; }
-      .topbar { position: static; }
+      .topbar { top: 8px; }
     }
 
-    /* Print/PDF: remove gradients + keep ink-friendly */
+    /* Print: remove heavy backgrounds (ink saving) */
     @media print {
       body { background: white !important; padding: 0 !important; }
       .topbar { display: none !important; }
-      .header { color: #000 !important; text-shadow: none !important; }
-      .branding { background: #fff !important; border: 1px solid #ddd !important; }
-      .card { box-shadow: none !important; border: 1px solid #e5e5e5 !important; }
-      code { background: #f3f3f3 !important; color: #111 !important; }
-      .final { background: #fff !important; color: #000 !important; }
-      .final h2, .final p { color: #000 !important; }
-      .footer { background: #fff !important; color: #000 !important; box-shadow: none !important; border: 1px solid #e5e5e5 !important; }
-      .footer-cta { color: #000 !important; text-shadow: none !important; }
+      .card { box-shadow: none !important; }
+      .footer { box-shadow: none !important; }
     }
   </style>
 </head>
@@ -527,13 +471,9 @@
         <div class="pill">📄 PDF-style (scroll)</div>
         <div class="title">How to Build API URLs — DeepLogic AIA</div>
       </div>
-      <div class="right" style="display:flex;gap:10px;align-items:center;">
-        <a class="btn" href="/skool-classroom-library/">🏠 Back to Library</a>
-        <button class="btn" onclick="window.print()">🖨️ Print / PDF</button>
-      </div>
+      <a class="btn" href="javascript:window.print()">🖨️ Print / PDF</a>
     </div>
 
-    <!-- Header -->
     <div class="header">
       <h1>🌤️ How to Build API URLs</h1>
       <p class="subtitle">Understanding URL Structure with Weather APIs</p>
@@ -543,7 +483,6 @@
       </div>
     </div>
 
-    <!-- The Pattern -->
     <div class="card">
       <h2>📐 The Pattern</h2>
       <div class="formula">
@@ -555,7 +494,6 @@
       </div>
     </div>
 
-    <!-- Breaking It Down -->
     <div class="card">
       <h2>🔨 Breaking It Down</h2>
 
@@ -582,14 +520,13 @@
         <div class="breakdown-content">
           <h3>PARAMETERS (Specific details)</h3>
           <code>?q={city}&amp;appid={your_key}</code>
-          <p class="description">The stuff in { } brackets gets REPLACED with real values</p>
+          <p class="description">The stuff in {} brackets gets REPLACED with real values</p>
         </div>
       </div>
     </div>
 
-    <!-- Real Example -->
-    <div class="card example-card">
-      <h2>💡 Real Example: Get Weather for Tauranga</h2>
+    <div class="card">
+      <h2>💡 Real Example: Get Tauranga Weather</h2>
 
       <div class="example-box wrong">
         <div class="example-label">❌ What you see in docs:</div>
@@ -606,7 +543,6 @@
       <p class="returns"><strong>Returns:</strong> Temperature, humidity, wind speed for Tauranga! 🌊</p>
     </div>
 
-    <!-- Visual Breakdown -->
     <div class="card">
       <h2>🎨 Visual Breakdown</h2>
       <div class="url-builder">
@@ -627,7 +563,6 @@
       </div>
     </div>
 
-    <!-- More Examples -->
     <div class="card">
       <h2>🎯 More Weather Examples</h2>
       <div class="api-box">
@@ -644,10 +579,9 @@
       </div>
     </div>
 
-    <!-- n8n Workflow -->
     <div class="card">
       <h2>🔄 Using in n8n Workflows</h2>
-      <p class="insight">Here’s how to set up an HTTP Request node for a weather API:</p>
+      <p class="returns" style="margin-top:0;"><strong>Goal:</strong> Build the URL, call it, then use the JSON response.</p>
 
       <div class="workflow">
         <div class="node">Trigger</div>
@@ -663,24 +597,23 @@
         <div class="step"><strong>URL:</strong> https://api.openweathermap.org/data/2.5/weather</div>
         <div class="step"><strong>Query Parameters:</strong>
           <br>• q = {{$json.city}}
-          <br>• appid = {{$json.weather_api_key}}
+          <br>• appid = YOUR_API_KEY
+          <br>• units = metric (optional)
         </div>
-        <div class="step"><strong>Authentication:</strong> Many APIs use an API key in query params or headers.</div>
+        <div class="step"><strong>Authentication:</strong> Many APIs use API keys as query params or headers.</div>
       </div>
 
-      <p class="insight">💡 Pro Tip: Use {{$json.fieldname}} to dynamically insert data from previous nodes!</p>
+      <p class="returns">💡 Pro Tip: Use <code>{{$json.fieldname}}</code> to dynamically insert data from previous nodes!</p>
     </div>
 
-    <!-- Pro Tips -->
     <div class="card">
       <h2>⚡ Pro Tips</h2>
       <div class="tip">💾 In n8n: Use <code>{{$json.city}}</code> to insert data automatically</div>
-      <div class="tip">🔑 Keep your API key secret (don’t share in public!)</div>
-      <div class="tip">📋 URL parameters use <code>?</code> for first param, <code>&amp;</code> for additional ones</div>
-      <div class="tip">🌐 Spaces in URLs become <code>%20</code> (e.g., “New Zealand” → “New%20Zealand”)</div>
+      <div class="tip">🔑 Keep your API key secret (don’t paste it publicly)</div>
+      <div class="tip">📋 URL Parameters use <code>?</code> for first param, <code>&amp;</code> for additional ones</div>
+      <div class="tip">🌐 Spaces become <code>%20</code> (e.g., "New Zealand" → "New%20Zealand")</div>
     </div>
 
-    <!-- Common Mistakes -->
     <div class="card">
       <h2>⚠️ Common Mistakes to Avoid</h2>
       <div class="mistake-box">
@@ -695,24 +628,20 @@
       </div>
     </div>
 
-    <!-- Final Summary -->
     <div class="card final">
-      <h2>🎉 You’ve Got This!</h2>
+      <h2>🎉 You've Got This!</h2>
       <p>Every API follows this same pattern:</p>
-      <div class="final-formula">
-        BASE_URL + ENDPOINT + ?parameters
-      </div>
+      <div class="final-formula">BASE_URL + ENDPOINT + ?parameters</div>
       <p class="final-message">
         ✅ Master this and you can connect to ANY API in n8n!<br>
-        ✅ Weather APIs, CRMs, dashboards — everything!<br>
+        ✅ Weather APIs, CRMs, databases, everything!<br>
         ✅ Start building powerful automations today!
       </p>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
       <div class="footer-logo">📚 DeepLogic AIA</div>
-      <div class="footer-text">n8n &amp; AI Automation Training</div>
+      <div class="footer-text">n8n & AI Automation Training</div>
       <div class="footer-cta">Start Building Today!</div>
     </div>
 
