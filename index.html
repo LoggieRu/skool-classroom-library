@@ -7,31 +7,77 @@
 
   <style>
     :root{
-      --blue:#0078FF;
-      --purple:#7E58FF;
-      --teal:#00D4AA;
-      --orange:#FF6D5A;
+      --blue:#0055ff;
+      --cyan:#00ddff;
+      --pink:#ff2244;
 
-      --ink:#16181d;
-      --muted:#5b6476;
-      --paper:#ffffff;
-      --soft:#f2f5f9;
-      --stroke: rgba(22,24,29,0.08);
-      --shadow: 0 18px 60px rgba(0,0,0,0.14);
+      --ink:#eaf0ff;
+      --muted:rgba(234,240,255,0.72);
+
+      --paper: rgba(255,255,255,0.92);
+      --paper-solid:#ffffff;
+
+      --stroke: rgba(255,255,255,0.14);
+      --stroke-dark: rgba(10,18,40,0.10);
+
+      --shadow: 0 26px 90px rgba(0,0,0,0.55);
+      --shadow-soft: 0 14px 40px rgba(0,0,0,0.22);
+
       --radius: 22px;
     }
 
     *{margin:0;padding:0;box-sizing:border-box}
 
     body{
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
       min-height: 100vh;
-      background:
-        radial-gradient(1200px 800px at 15% 10%, rgba(0,212,170,0.18), transparent 52%),
-        radial-gradient(1200px 800px at 85% 20%, rgba(126,88,255,0.18), transparent 55%),
-        linear-gradient(135deg, var(--blue) 0%, var(--purple) 100%);
+      color: var(--ink);
       padding: 26px 16px 70px;
+      overflow-x: hidden;
+
+      /* DARK blue background */
+      background:
+        radial-gradient(circle at 50% 20%,
+          rgba(0,85,255,0.30) 0%,
+          rgba(0,55,150,0.22) 30%,
+          rgba(5,15,35,0.92) 60%,
+          rgba(0,0,0,1) 100%),
+        linear-gradient(180deg,#020510 0%,#051535 70%,#010408 100%);
+      background-attachment: fixed;
+    }
+
+    /* Aurora + subtle hex lines */
+    body::before,
+    body::after{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    body::before{
+      background:
+        radial-gradient(circle at 30% 55%, rgba(0,221,255,0.22), transparent 58%),
+        radial-gradient(circle at 75% 35%, rgba(255,34,68,0.16), transparent 62%);
+      filter: blur(140px);
+      animation: aurora 10s ease-in-out infinite alternate;
+      opacity: 0.9;
+    }
+
+    body::after{
+      background-image:
+        repeating-linear-gradient(60deg,
+          transparent 0px,
+          transparent 22px,
+          rgba(0,221,255,0.05) 22px,
+          rgba(0,221,255,0.05) 23px);
+      opacity: 0.35;
+    }
+
+    @keyframes aurora{
+      0%{ transform: translate(-35px,-25px) scale(1.05); }
+      100%{ transform: translate(35px,25px) scale(1.18); }
     }
 
     .wrap{
@@ -41,7 +87,7 @@
 
     .topbar{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap: 12px;
       margin-bottom: 16px;
@@ -50,60 +96,70 @@
     .brand{
       display:flex;
       flex-direction:column;
-      gap: 4px;
-      color: white;
+      gap: 6px;
+      min-width: 0;
     }
 
-    .brand .kicker{
+    .kicker{
       display:inline-flex;
       align-items:center;
-      gap: 8px;
+      gap: 10px;
       font-weight: 900;
       letter-spacing: 0.02em;
       font-size: 14px;
+      color: rgba(234,240,255,0.92);
       opacity: 0.95;
+      text-shadow: 0 8px 26px rgba(0,0,0,0.45);
     }
 
     .brand h1{
-      font-size: 34px;
+      font-size: 36px;
       font-weight: 1000;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      text-shadow: 0 10px 30px rgba(0,0,0,0.18);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      text-shadow: 0 14px 40px rgba(0,0,0,0.55);
     }
 
     .brand p{
       font-size: 15px;
-      font-weight: 650;
+      font-weight: 750;
       opacity: 0.92;
+      color: rgba(234,240,255,0.85);
     }
 
+    /* “Hosted” pill with lava accent */
     .pill{
       display:inline-flex;
       align-items:center;
       gap: 8px;
       padding: 10px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.16);
       border: 1px solid rgba(255,255,255,0.22);
-      color: rgba(255,255,255,0.95);
-      font-weight: 800;
+      backdrop-filter: blur(14px);
+      color: rgba(255,255,255,0.92);
+      font-weight: 900;
       font-size: 13px;
-      backdrop-filter: blur(10px);
       white-space: nowrap;
+
+      background:
+        linear-gradient(135deg, rgba(0,221,255,0.18), rgba(0,85,255,0.12)),
+        rgba(255,255,255,0.08);
     }
 
     .paper{
-      background: var(--paper);
       border-radius: 28px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.16);
+
+      /* glass over dark bg */
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(18px);
     }
 
     .paper-inner{
       padding: 26px;
-      background: linear-gradient(180deg, rgba(0,120,255,0.06), transparent 220px);
+      background: linear-gradient(180deg, rgba(0,221,255,0.10), transparent 220px);
     }
 
     .hero{
@@ -115,11 +171,12 @@
     }
 
     .card{
-      background: white;
-      border: 1px solid var(--stroke);
+      background: var(--paper);
+      border: 1px solid rgba(10,18,40,0.08);
       border-radius: var(--radius);
-      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+      box-shadow: var(--shadow-soft);
       padding: 18px;
+      color: rgba(10,18,40,0.92);
     }
 
     .welcome h2{
@@ -127,12 +184,12 @@
       font-weight: 1000;
       letter-spacing: -0.01em;
       margin-bottom: 8px;
-      color: rgba(22,24,29,0.92);
+      color: rgba(10,18,40,0.92);
     }
 
     .welcome p{
-      color: var(--muted);
-      font-weight: 650;
+      color: rgba(10,18,40,0.68);
+      font-weight: 700;
       line-height: 1.6;
     }
 
@@ -150,20 +207,20 @@
       gap: 10px;
       padding: 12px 14px;
       border-radius: 16px;
-      background: var(--soft);
-      border: 1px solid rgba(22,24,29,0.06);
+      background: rgba(10,18,40,0.05);
+      border: 1px solid rgba(10,18,40,0.08);
       font-weight: 900;
     }
 
     .badge span{
-      color: rgba(22,24,29,0.82);
+      color: rgba(10,18,40,0.78);
       font-size: 13px;
       font-weight: 900;
     }
 
     .badge strong{
       font-size: 13px;
-      color: rgba(22,24,29,0.60);
+      color: rgba(10,18,40,0.55);
       font-weight: 900;
     }
 
@@ -178,19 +235,19 @@
       position: relative;
       overflow: hidden;
       border-radius: var(--radius);
-      border: 1px solid var(--stroke);
-      background: white;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+      border: 1px solid rgba(10,18,40,0.10);
+      background: var(--paper-solid);
+      box-shadow: var(--shadow-soft);
       padding: 18px;
       transition: transform .15s ease, box-shadow .15s ease;
       text-decoration: none;
-      color: inherit;
+      color: rgba(10,18,40,0.92);
       min-height: 160px;
     }
 
     .tile:hover{
       transform: translateY(-3px);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.10);
+      box-shadow: 0 18px 46px rgba(0,0,0,0.20);
     }
 
     .tile .icon{
@@ -214,12 +271,13 @@
     }
 
     .tile p{
-      color: var(--muted);
-      font-weight: 650;
+      color: rgba(10,18,40,0.68);
+      font-weight: 700;
       line-height: 1.55;
       font-size: 13px;
     }
 
+    /* CTA block inside white card */
     .cta{
       margin-top: 16px;
       display:flex;
@@ -229,14 +287,15 @@
       justify-content: space-between;
       padding: 14px 16px;
       border-radius: 18px;
-      background: linear-gradient(135deg, rgba(0,120,255,0.10), rgba(126,88,255,0.10));
-      border: 1px solid rgba(0,120,255,0.12);
+      background: linear-gradient(135deg, rgba(0,221,255,0.12), rgba(0,85,255,0.10));
+      border: 1px solid rgba(0,85,255,0.10);
     }
 
     .cta .left{
       display:flex;
       flex-direction:column;
       gap: 2px;
+      color: rgba(10,18,40,0.90);
     }
 
     .cta .left strong{
@@ -245,49 +304,60 @@
     }
 
     .cta .left span{
-      color: rgba(22,24,29,0.70);
-      font-weight: 700;
+      color: rgba(10,18,40,0.66);
+      font-weight: 750;
       font-size: 13px;
     }
 
+    /* Lava-lamp button accent */
     .btn{
       display:inline-flex;
       align-items:center;
+      justify-content:center;
       gap: 8px;
-      padding: 10px 12px;
+      padding: 10px 14px;
       border-radius: 14px;
-      border: 1px solid rgba(22,24,29,0.12);
-      background: white;
+      border: 1px solid rgba(10,18,40,0.10);
       cursor: pointer;
-      font-weight: 900;
+      font-weight: 1000;
       font-size: 13px;
       text-decoration: none;
-      color: rgba(22,24,29,0.82);
+      color: white;
+
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--pink));
+      background-size: 200% 200%;
+      box-shadow: 0 14px 40px rgba(0,85,255,0.25), 0 0 26px rgba(255,34,68,0.18);
       transition: transform .12s ease, box-shadow .12s ease;
+      animation: moveGradient 6s ease infinite;
     }
 
     .btn:hover{
       transform: translateY(-1px);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+      box-shadow: 0 18px 54px rgba(0,221,255,0.22), 0 0 34px rgba(255,34,68,0.24);
+    }
+
+    @keyframes moveGradient{
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .footer{
       margin-top: 18px;
       padding: 18px;
       border-radius: 22px;
-      background: linear-gradient(135deg, rgba(0,120,255,0.10), rgba(126,88,255,0.10));
-      border: 1px solid rgba(0,120,255,0.12);
-      color: rgba(22,24,29,0.76);
-      font-weight: 700;
+      background: linear-gradient(135deg, rgba(0,221,255,0.10), rgba(255,34,68,0.08));
+      border: 1px solid rgba(0,221,255,0.10);
+      color: rgba(10,18,40,0.72);
+      font-weight: 750;
       font-size: 13px;
       line-height: 1.6;
     }
 
     /* Icon gradients */
     .g-blue{ background: linear-gradient(135deg, var(--blue), #2f92ff); }
-    .g-purple{ background: linear-gradient(135deg, var(--purple), #a08bff); }
-    .g-teal{ background: linear-gradient(135deg, var(--teal), #1ef0c4); }
-    .g-orange{ background: linear-gradient(135deg, var(--orange), #ff9b8f); }
+    .g-cyan{ background: linear-gradient(135deg, var(--cyan), #6cf0ff); }
+    .g-pink{ background: linear-gradient(135deg, var(--pink), #ff6a86); }
 
     @media (max-width: 950px){
       .grid{ grid-template-columns: repeat(2, 1fr); }
@@ -304,7 +374,7 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="kicker">🚀 DeepLogic AIA <span style="opacity:.85;">•</span> n8n & AI Automation Training</div>
+        <div class="kicker">🚀 DeepLogic AIA <span style="opacity:.75;">•</span> n8n & AI Automation Training</div>
         <h1>Skool Classroom Library</h1>
         <p>AI & Automation Theory • Clean, shareable lesson pages • No logins</p>
       </div>
@@ -331,34 +401,32 @@
         </div>
 
         <div class="grid">
-          <!-- LIVE LINK: API URLs -->
           <a class="tile" href="./pages/api-urls/">
             <div class="icon g-blue">☁️</div>
             <h3>API URL Builder (Weather)</h3>
             <p>Learn the URL pattern: BASE + ENDPOINT + PARAMETERS. Includes examples and n8n HTTP Request setup.</p>
           </a>
 
-          <!-- PLACEHOLDER LINKS: create these pages later -->
           <a class="tile" href="./pages/http-basics/">
-            <div class="icon g-purple">🌐</div>
+            <div class="icon g-cyan">🌐</div>
             <h3>HTTP Basics</h3>
             <p>Methods, headers, query params, auth types. (Create: pages/http-basics/index.html)</p>
           </a>
 
           <a class="tile" href="./pages/json-basics/">
-            <div class="icon g-teal">🧩</div>
+            <div class="icon g-pink">🧩</div>
             <h3>JSON Basics</h3>
             <p>JSON structure, arrays/objects, common patterns for automations. (Create: pages/json-basics/index.html)</p>
           </a>
 
           <a class="tile" href="./pages/n8n-workflows/">
-            <div class="icon g-orange">⚙️</div>
+            <div class="icon g-cyan">⚙️</div>
             <h3>n8n Workflows</h3>
             <p>Workflow patterns, reusable templates, best practices. (Create: pages/n8n-workflows/index.html)</p>
           </a>
 
           <a class="tile" href="./pages/make-concepts/">
-            <div class="icon g-purple">🧠</div>
+            <div class="icon g-pink">🧠</div>
             <h3>Make Concepts</h3>
             <p>Scenarios, routers, error handling, data mapping. (Create: pages/make-concepts/index.html)</p>
           </a>
