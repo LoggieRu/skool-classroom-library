@@ -120,16 +120,64 @@
       white-space: nowrap;
     }
 
-    .brand h1{
-      font-size: 40px;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      font-weight: 1000;
-      background: linear-gradient(135deg, var(--cyan), var(--blue), var(--purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(0,119,255,0.35);
-    }
+/* ===== LAVA TEXT (ONLY THE LETTERS) ===== */
+.brand h1.lava-title{
+  position: relative;
+  display: inline-block;
+  font-size: 40px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 1000;
+
+  /* your existing blue gradient fill */
+  background: linear-gradient(135deg, var(--cyan), var(--blue), var(--purple));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* keep a subtle base blue glow */
+  text-shadow: 0 0 30px rgba(0,119,255,0.35);
+}
+
+.brand h1.lava-title::after{
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /* moving red/pink “lava” */
+  background: linear-gradient(
+    90deg,
+    rgba(255,34,68,0.00) 0%,
+    rgba(255,34,68,0.85) 18%,
+    rgba(255,42,138,0.85) 42%,
+    rgba(255,34,68,0.65) 64%,
+    rgba(255,42,138,0.85) 82%,
+    rgba(255,34,68,0.00) 100%
+  );
+  background-size: 240% 100%;
+  animation: lavaFlow 4.6s ease-in-out infinite;
+
+  /* clip overlay to text ONLY */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* glow through letters */
+  filter: blur(0.35px);
+  text-shadow:
+    0 0 16px rgba(255,42,138,0.55),
+    0 0 34px rgba(255,34,68,0.35);
+
+  opacity: 0.9;
+  mix-blend-mode: screen;
+}
+
+@keyframes lavaFlow{
+  0%{background-position: 0% 50%}
+  50%{background-position: 100% 50%}
+  100%{background-position: 0% 50%}
+}
 
     .brand p{
       color: rgba(245,247,255,0.82);
@@ -405,7 +453,7 @@
     <div class="topbar">
       <div class="brand">
         <div class="kicker">🚀 DeepLogic AIA <span style="opacity:.7;">•</span> n8n & AI Automation Training</div>
-        <h1>Skool Classroom Library</h1>
+      <h1 class="lava-title" data-text="Skool Classroom Library">Skool Classroom Library</h1>
         <p>AI & Automation Theory • Clean, shareable lesson pages • No logins</p>
       </div>
       <div class="pill">✅ Hosted on GitHub Pages</div>
