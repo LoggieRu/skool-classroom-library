@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>n8n Beginner Course — Video 2: APIs and Webhooks (DeepLogic AIA)</title>
+
+  <style>
+    :root{
+      /* LOCKED DeepLogic Blue Palette (A/B/C/D) */
+      --bg-a:#05014A; /* A */
+      --bg-b:#08027C; /* B */
+      --bg-c:#0F03E5; /* C */
+      --bg-d:#031DE5; /* D */
+
+      /* Use these for the dark outer backgrounds */
+      --dl-ink:var(--bg-a);
+      --dl-ink2:var(--bg-b);
+
+      /* Keep these (your interior pastel/gradients/buttons rely on them) */
+      --dl-cyan:#00E5FF;
+      --dl-violet:#7C3AED;
+      --dl-magenta:#FF2D95;
+      --dl-lime:#A3FF12;
+
+      --card:#ffffff;
+      --soft:#F4F6FB;
+      --text:#0F172A;
+      --muted:#64748B;
+
+      --shadow:0 20px 60px rgba(0,0,0,.28);
+      --radius:16px;
+
+      /* QUICK TWEAKS */
+      --kitt-speed: 8.5s;     /* slower = bigger number */
+      --title-offset: 10px;   /* moves scanned text right */
+      --emoji-gap: 16px;      /* space between emoji + text */
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      line-height:1.6;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(0,229,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 80% 10%, rgba(255,45,149,.16), transparent 55%),
+        radial-gradient(900px 700px at 70% 80%, rgba(124,58,237,.14), transparent 60%),
+        linear-gradient(135deg, var(--dl-ink) 0%, var(--dl-ink2) 100%);
+      padding:20px;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:0 auto;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .ribbon{
+      position:absolute;
+      top:18px;
+      right:-64px;
+      z-index:3;
+      transform:rotate(35deg);
+      background:linear-gradient(135deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
+      color:#071018;
+      padding:10px 78px;
+      font-weight:950;
+      letter-spacing:.4px;
+      font-size:.9rem;
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.25);
+      user-select:none;
+    }
+
+    header{
+      position:relative;
+      padding:54px 44px 40px;
+      text-align:center;
+      color:#fff;
+
+      /* Blue-only header background */
+      background:
+        radial-gradient(900px 420px at 20% 20%, rgba(15,3,229,.26), transparent 60%),
+        radial-gradient(800px 420px at 80% 30%, rgba(3,29,229,.18), transparent 60%),
+        linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-d) 100%);
+
+      overflow:hidden;
+      border-bottom:4px solid rgba(15,3,229,.45);
+    }
+
+    header::before{
+      content:"";
+      position:absolute;
+      inset:-40% -30%;
+      background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.14), transparent 58%);
+      transform:rotate(-8deg);
+      pointer-events:none;
+    }
+
+    .title{position:relative;z-index:1;}
+
+    .brand-text{
+      font-weight:950;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      font-size:1.15rem;
+      background:linear-gradient(90deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      margin-bottom:14px;
+    }
+
+    /* =========================
+       KITT SCAN (ONLY THE TEXT)
+       ========================= */
+
+    header .hero-h1{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: var(--emoji-gap);
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 2.7vw, 3rem);
+      font-weight: 950;
+      line-height: 1.1;
+      color:#fff;
+      text-shadow:2px 2px 4px rgba(0,0,0,.18);
+    }
+
+    header .hero-h1 .h1-emoji{
+      color:#fff;
+      text-shadow:2px 2px 4px rgba(0,0,0,.18);
+      flex: 0 0 auto;
+    }
+
+    header .hero-h1 .kitt-title{
+      position:relative;
+      display:inline-block;
+      color:#fff;
+      padding-left: var(--title-offset);
+    }
+
+    header .hero-h1 .kitt-title::after{
+      content: attr(data-text);
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.00) 0%,
+        rgba(255,255,255,0.00) 40%,
+        rgba(255,34,68,0.00)   46%,
+        rgba(255,34,68,0.95)   50%,
+        rgba(255,42,138,0.45)  56%,
+        rgba(255,255,255,0.00) 62%,
+        rgba(255,255,255,0.00) 100%
+      );
+
+      background-size: 320% 100%;
+      animation: kittScan var(--kitt-speed) linear infinite;
+
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color: transparent;
+
+      text-shadow:
+        0 0 14px rgba(255,34,68,0.28),
+        0 0 26px rgba(255,42,138,0.18);
+
+      opacity:0.95;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes kittScan{
+      0%   { background-position: 160% 50%; }
+      100% { background-position: -160% 50%; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      header .hero-h1 .kitt-title::after{ animation: none; }
+    }
+
+    header h2{
+      font-size:clamp(1.15rem,1.6vw,1.5rem);
+      font-weight:750;
+      opacity:.96;
+    }
+
+    .presented-by{
+      margin-top:18px;
+      font-size:1.02rem;
+      opacity:.95;
+      max-width:980px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .presented-by strong{
+      background:linear-gradient(90deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      font-weight:950;
+    }
+
+    .video-section{
+      background:var(--soft);
+      padding:30px 40px;
+      border-bottom:3px solid rgba(255,45,149,.55);
+    }
+    .video-placeholder{
+      background:
+        radial-gradient(900px 420px at 20% 20%, rgba(15,3,229,.22), transparent 60%),
+        radial-gradient(800px 420px at 78% 25%, rgba(3,29,229,.16), transparent 62%),
+        linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-d) 100%);
+      color:#fff;
+      padding:60px 40px;
+      text-align:center;
+      border-radius:12px;
+      margin-bottom:16px;
+      box-shadow:0 14px 30px rgba(0,0,0,.16);
+    }
+
+    .video-placeholder h3{
+      font-size:clamp(1.5rem,2vw,2.1rem);
+      margin-bottom:10px;
+      color:#fff;
+    }
+    .video-placeholder p{opacity:.95;}
+
+    .actions-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:center;
+      margin-top:10px;
+    }
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:14px 18px;
+      font-size:1.02rem;
+      cursor:pointer;
+      font-weight:850;
+      transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+      box-shadow:0 10px 18px rgba(0,0,0,.14);
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
+      color:#061019;
+    }
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.02);
+      box-shadow:0 14px 24px rgba(0,0,0,.18);
+    }
+    .btn-ghost{
+      background:#fff;
+      color:#0b1220;
+      border:1px solid rgba(15,23,42,.12);
+    }
+    .btn-ghost:hover{
+      transform:translateY(-2px);
+      box-shadow:0 14px 24px rgba(0,0,0,.14);
+    }
+
+    .content{padding:42px;}
+    section{margin-bottom:52px;}
+
+    h2.section-title{
+      color:#0b1220;
+      font-size:clamp(1.6rem,2.1vw,2.2rem);
+      margin-bottom:22px;
+      padding-bottom:14px;
+      border-bottom:3px solid rgba(0,229,255,.55);
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    h2.section-title::after{
+      content:"";
+      height:10px;
+      flex:1;
+      background:linear-gradient(90deg, rgba(0,229,255,.55), rgba(124,58,237,.45), rgba(255,45,149,.45));
+      border-radius:999px;
+      opacity:.7;
+      margin-left:8px;
+    }
+
+    h3{
+      color:#1e2a5b;
+      font-size:1.55rem;
+      margin:28px 0 12px;
+    }
+
+    .intro-box{
+      background:linear-gradient(135deg, rgba(0,229,255,.18), rgba(124,58,237,.18), rgba(255,45,149,.18));
+      border:1px solid rgba(15,23,42,.08);
+      padding:30px;
+      border-radius:14px;
+      margin-bottom:44px;
+      box-shadow:0 12px 26px rgba(0,0,0,.10);
+      position:relative;
+      overflow:hidden;
+    }
+    .intro-box::before{
+      content:"";
+      position:absolute; inset:-50% -50%;
+      background:radial-gradient(circle at 20% 20%, rgba(0,229,255,.25), transparent 55%);
+      transform:rotate(-8deg);
+      pointer-events:none;
+    }
+    .intro-box h2{position:relative;margin-bottom:12px;}
+    .intro-box p, .intro-box ul{position:relative;}
+    .intro-box ul{margin-top:12px;margin-left:18px;}
+    .intro-box li{padding:6px 0;}
+
+    ul.basic{margin-left:28px;margin-top:10px;}
+    ul.basic li{padding:6px 0;}
+
+    .definition-box{
+      background:#F7FBFF;
+      border-left:6px solid var(--dl-violet);
+      padding:22px;
+      margin:22px 0;
+      border-radius:12px;
+      font-size:1.08rem;
+      border:1px solid rgba(15,23,42,.08);
+    }
+    .definition-box strong{color:#3b2aa7;font-size:1.15rem;}
+
+    .key-takeaway{
+      background:linear-gradient(135deg, rgba(163,255,18,.25), rgba(0,229,255,.18), rgba(255,45,149,.12));
+      color:#0b1220;
+      padding:28px;
+      border-radius:14px;
+      margin:34px 0;
+      text-align:center;
+      font-size:1.15rem;
+      font-weight:900;
+      box-shadow:0 12px 26px rgba(0,0,0,.10);
+      border:1px solid rgba(15,23,42,.08);
+    }
+
+    .concept-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+      gap:22px;
+      margin:24px 0;
+    }
+    .concept-card{
+      background:#fff;
+      padding:22px;
+      border-radius:14px;
+      box-shadow:0 10px 18px rgba(0,0,0,.07);
+      border:1px solid rgba(15,23,42,.08);
+      position:relative;
+      overflow:hidden;
+    }
+    .concept-card::before{
+      content:"";
+      position:absolute; inset:-50% -50%;
+      background:radial-gradient(circle at 20% 20%, rgba(0,229,255,.12), transparent 55%);
+      transform:rotate(-10deg);
+      pointer-events:none;
+    }
+    .concept-card h4{position:relative;color:#0b1220;font-size:1.28rem;margin-bottom:10px;}
+    .concept-card p, .concept-card ul{position:relative;}
+    .icon{position:relative;font-size:2.2rem;margin-bottom:10px;}
+
+    .workflow-example{
+      background:#F1F5FF;
+      padding:26px;
+      border-radius:14px;
+      margin:22px 0;
+      border:1px solid rgba(15,23,42,.08);
+    }
+    .workflow-visual{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin:18px 0 8px;
+    }
+    .workflow-step{
+      background:linear-gradient(135deg, rgba(0,229,255,.20), rgba(124,58,237,.20), rgba(255,45,149,.18));
+      color:#0b1220;
+      padding:12px 18px;
+      border-radius:12px;
+      font-weight:900;
+      text-align:center;
+      min-width:150px;
+      box-shadow:0 10px 18px rgba(0,0,0,.10);
+      border:1px solid rgba(15,23,42,.08);
+    }
+    .workflow-arrow{font-size:2rem;color:#3b82f6;font-weight:900;}
+
+    .table-wrap{
+      overflow-x:auto;
+      border-radius:14px;
+      box-shadow:0 10px 18px rgba(0,0,0,.07);
+      border:1px solid rgba(15,23,42,.08);
+    }
+    table{width:100%;border-collapse:collapse;min-width:760px;background:#fff;}
+    thead tr{background:linear-gradient(135deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));color:#061019;}
+    th, td{padding:14px;text-align:left;border-bottom:1px solid rgba(0,0,0,.06);}
+    tbody tr:nth-child(odd){background:#F8FAFF;}
+
+    .next-steps{
+      background:
+        radial-gradient(900px 420px at 20% 20%, rgba(15,3,229,.18), transparent 60%),
+        radial-gradient(900px 420px at 80% 30%, rgba(3,29,229,.14), transparent 60%),
+        linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 60%, var(--bg-d) 100%);
+      color:#fff;
+      padding:36px;
+      border-radius:14px;
+      margin:44px 0 0;
+      text-align:center;
+      box-shadow:0 12px 26px rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .next-steps h3{
+      color: #ffffff !important;
+      font-size: 2rem !important;
+      font-weight: 950 !important;
+      letter-spacing: -0.01em;
+      margin: 0 0 12px !important;
+      text-shadow: 0 8px 22px rgba(0,0,0,0.35);
+      opacity: 1 !important;
+    }
+
+    .next-steps ul{
+      text-align: left;
+      display: inline-block;
+      margin: 14px auto 0;
+      padding-left: 1.2em;
+      max-width: 640px;
+    }
+
+    .next-steps li{
+      padding: 6px 0;
+      list-style-position: inside;
+    }
+
+    footer{
+      background:#070B14;
+      color:#fff;
+      padding:24px 40px;
+      text-align:center;
+      border-top:1px solid rgba(255,255,255,.10);
+    }
+    footer p{opacity:.95;}
+    footer .credit{margin-top:10px;font-size:.98rem;opacity:.92;}
+    footer .credit strong{
+      background:linear-gradient(90deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+      font-weight:950;
+    }
+
+    @media print{
+      *{
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body{ background:#fff; padding:0; }
+      .container{ box-shadow:none; }
+
+      .video-section{ display:none; }
+      .ribbon{ display:none; }
+      .btn{ display:none; }
+
+      header,
+      .intro-box,
+      .workflow-example,
+      .concept-card,
+      .definition-box,
+      .key-takeaway,
+      .table-wrap,
+      .next-steps,
+      footer{
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      section{
+        break-before: page;
+        page-break-before: always;
+      }
+
+      .content section:first-of-type{
+        break-before: auto;
+        page-break-before: auto;
+      }
+
+      h2, h3{
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+    }
+
+    @media (max-width:768px){
+      .content{padding:28px;}
+      header{padding:46px 22px 34px;}
+      .video-section{padding:26px 22px;}
+      .workflow-visual{flex-direction:column;}
+      .workflow-arrow{transform:rotate(90deg);}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="top">
+    <div class="ribbon">DeepLogic AIA</div>
+
+    <header>
+      <div class="title">
+        <div class="brand-text">DeepLogic Creative Media</div>
+
+        <h1 class="hero-h1">
+          <span class="h1-emoji" aria-hidden="true">📚</span>
+          <span class="kitt-title" data-text="n8n Beginner Course">n8n Beginner Course</span>
+        </h1>
+
+        <h2>Video 2: APIs and Webhooks</h2>
+
+        <div class="presented-by">
+          <p><strong>Presented by The AI Skills Forge</strong>, thanks to the official n8n program.</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="video-section">
+      <div class="video-placeholder">
+        <h3>🎥 Watch the Video</h3>
+        <p>This companion guide is designed to be used alongside the video lesson.</p>
+        <p style="margin-top:14px;font-size:.95rem;">Video Duration: ~15 minutes</p>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print This Guide</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="intro-box">
+        <h2 style="font-size:clamp(1.4rem,1.9vw,2rem);">📖 Lesson Overview</h2>
+        <p>
+          In this lesson, you’ll learn two foundational concepts you need before building end-to-end workflows:
+          <strong>APIs</strong> and <strong>webhooks</strong>.
+        </p>
+        <p style="margin-top:14px;"><strong>By the end of this lesson, you will understand:</strong></p>
+        <ul>
+          <li>What an API is (with a simple analogy you can remember)</li>
+          <li>How API documentation works and why it matters</li>
+          <li>The components of an HTTP request: URL, method, headers, and body</li>
+          <li>How authentication (credentials) is commonly handled</li>
+          <li>The components of an HTTP response: status code, headers, and body</li>
+          <li>What webhooks are, how they differ from polling, and when to use them</li>
+        </ul>
+      </div>
+
+      <section id="api-basics">
+        <h2 class="section-title">🍽️ What is an API?</h2>
+
+        <div class="definition-box">
+          <strong>Definition:</strong> An API (Application Programming Interface) exposes a service that developers can consume to interact with an application.
+        </div>
+
+        <h3>The Restaurant Analogy</h3>
+        <p>
+          Imagine you’re sitting at a restaurant. You don’t walk into the kitchen to cook your meal — you ask the waiter.
+          The waiter takes your request to the kitchen and returns the result to your table.
+        </p>
+
+        <div class="workflow-example">
+          <div class="workflow-visual">
+            <div class="workflow-step">Client (You)</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">API Interface (Waiter)</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Application (Kitchen)</div>
+          </div>
+          <p style="margin-top:12px;">
+            <strong>Menu = Documentation</strong>. It tells you what you can request and how to request it.
+          </p>
+        </div>
+
+        <h3>Why the Interface Matters</h3>
+        <p>
+          The interface abstracts complexity. Without an API, you’d need to “go into the kitchen”.
+        </p>
+
+        <div class="key-takeaway">
+          💡 APIs give you an easy, standardized way to access application data and functionality.
+        </div>
+
+        <h3>Example: Google Sheets</h3>
+        <p>
+          Google Sheets provides an API with services such as “get all data in a sheet” or “update rows.”
+        </p>
+      </section>
+
+      <section id="terminology">
+        <h2 class="section-title">🧠 Key Terminology</h2>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="icon">📤</div>
+            <h4>Request</h4>
+            <p>The message you send through the interface to ask the application to do something.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">📥</div>
+            <h4>Response</h4>
+            <p>The message the application returns back through the interface with the result.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🧑‍💻</div>
+            <h4>Client & Server</h4>
+            <p>You (or n8n) is the client. The API endpoint you call represents the server side.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="http-requests">
+        <h2 class="section-title">🌐 HTTP Requests</h2>
+
+        <p>
+          Most APIs you’ll use in automations are built on HTTP. In n8n, the <strong>HTTP Request</strong> node mirrors these concepts directly.
+        </p>
+
+        <h3>The 4 Components of an HTTP Request</h3>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="icon">🔗</div>
+            <h4>1) URL</h4>
+            <p>The location of the resource you want to access.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🏷️</div>
+            <h4>2) Method</h4>
+            <p>The action verb for what you want to do.</p>
+            <ul class="basic">
+              <li><strong>GET</strong> — retrieve information</li>
+              <li><strong>POST</strong> — send information</li>
+              <li>Less common: DELETE, PUT, PATCH</li>
+            </ul>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🧾</div>
+            <h4>3) Headers</h4>
+            <p>Extra context about your request.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">📦</div>
+            <h4>4) Body</h4>
+            <p>The payload you send (usually for POST requests).</p>
+          </div>
+        </div>
+
+        <h3>Credentials & Authentication (Common Patterns)</h3>
+        <ul class="basic">
+          <li><strong>Query parameter:</strong> <code>?api_key=YOUR_KEY</code></li>
+          <li><strong>Header:</strong> <code>Authorization: Bearer YOUR_KEY</code></li>
+          <li><strong>OAuth:</strong> “Sign in with Google” flow</li>
+        </ul>
+
+        <div class="key-takeaway">
+          ✅ If you get a 401 error, authentication is the first thing to check.
+        </div>
+      </section>
+
+      <section id="http-responses">
+        <h2 class="section-title">📨 HTTP Responses</h2>
+
+        <h3>The 3 Components of an HTTP Response</h3>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="icon">🔢</div>
+            <h4>1) Status Code</h4>
+            <ul class="basic">
+              <li><strong>200</strong> — OK / success</li>
+              <li><strong>401</strong> — Unauthorized</li>
+              <li><strong>404</strong> — Not found</li>
+              <li><strong>500</strong> — Server error</li>
+            </ul>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🧾</div>
+            <h4>2) Headers</h4>
+            <p>Context about the response.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">📄</div>
+            <h4>3) Body</h4>
+            <p>The returned data itself.</p>
+          </div>
+        </div>
+
+        <div class="key-takeaway">
+          Easy rule: <strong>2xx = success</strong>, <strong>4xx = fix request</strong>, <strong>5xx = server issue</strong>.
+        </div>
+      </section>
+
+      <section id="webhooks">
+        <h2 class="section-title">🔔 Webhooks (Reverse APIs)</h2>
+
+        <h3>The Doorbell Analogy</h3>
+        <div class="workflow-example">
+          <div class="workflow-visual">
+            <div class="workflow-step">Polling</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">“Any new event yet?”</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Repeat</div>
+          </div>
+
+          <div class="workflow-visual" style="margin-top:18px;">
+            <div class="workflow-step">Webhook</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Event happens</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Instant notification</div>
+          </div>
+        </div>
+
+        <div class="key-takeaway">
+          💡 Use webhooks when you want workflows to trigger instantly.
+        </div>
+      </section>
+
+      <section id="quick-reference">
+        <h2 class="section-title">📝 Quick Reference Summary</h2>
+
+        <div class="table-wrap" role="region" aria-label="Quick reference summary table">
+          <table>
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>What it Means</th>
+                <th>Practical Use in n8n</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>API</strong></td>
+                <td>Interface to access data/services</td>
+                <td>Use app nodes or HTTP Request node</td>
+              </tr>
+              <tr>
+                <td><strong>Documentation</strong></td>
+                <td>Rules for calling the API</td>
+                <td>Pick endpoint, method, fields</td>
+              </tr>
+              <tr>
+                <td><strong>HTTP Request</strong></td>
+                <td>URL + Method + Headers + Body</td>
+                <td>Custom integrations</td>
+              </tr>
+              <tr>
+                <td><strong>Status Codes</strong></td>
+                <td>Success/failure signal</td>
+                <td>2xx OK, 4xx fix, 5xx retry</td>
+              </tr>
+              <tr>
+                <td><strong>Webhook</strong></td>
+                <td>Event-driven push</td>
+                <td>Trigger workflows instantly</td>
+              </tr>
+              <tr>
+                <td><strong>Polling</strong></td>
+                <td>Repeated checks</td>
+                <td>Slower / more resource-heavy</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="next-steps" id="next">
+        <h3>🚀 Next Steps</h3>
+        <p style="font-size:1.1rem;margin-top:10px;">You've completed Video 2!</p>
+        <p style="margin-top:12px;">
+          Next up: <strong>n8n Nodes</strong> — what they are and everything you need to know to start building your first workflows
+        </p>
+
+        <div style="margin-top:22px;padding-top:18px;border-top:2px solid rgba(255,255,255,.25);">
+          <p style="font-size:.98rem;opacity:.95;">📝 Action Items:</p>
+          <ul>
+            <li>Identify one API you use (Sheets, Slack, Stripe, CRM)</li>
+            <li>Find one GET and one POST example in its documentation</li>
+            <li>Open the n8n HTTP Request node and review its settings</li>
+            <li>Decide where a webhook would be better than polling</li>
+          </ul>
+        </div>
+
+        <div style="margin-top:18px;">
+          <button class="btn btn-ghost" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">
+            Back to Top ↑
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>For questions or support, please refer to the community admin</p>
+      <p class="credit">Special thanks to the collaboration between <strong>DeepLogic AI</strong> and <strong>The AI Skills Forge</strong>.</p>
+    </footer>
+
+    <script>
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const id = a.getAttribute('href');
+          const el = document.querySelector(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>
