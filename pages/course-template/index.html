@@ -17,7 +17,7 @@
       --dl-ink:var(--bg-a);
       --dl-ink2:var(--bg-b);
 
-      /* Keep these (interior pastel/gradients/buttons rely on them) */
+      /* Keep these (interior pastels/buttons rely on them) */
       --dl-cyan:#00E5FF;
       --dl-violet:#7C3AED;
       --dl-magenta:#FF2D95;
@@ -32,14 +32,15 @@
       --radius:16px;
 
       /* QUICK TWEAKS */
-      --kitt-speed: 8.5s;     /* slower = bigger number */
-      --title-offset: 10px;   /* move scanned TEXT right */
-      --emoji-gap: 16px;      /* space between emoji + text */
+      --kitt-speed: 8.5s;      /* slower = bigger number */
+      --title-offset: 10px;    /* moves scanned text right */
+      --emoji-gap: 16px;       /* emoji/text spacing */
     }
 
     *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{height:100%;}
     body{
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       line-height:1.6;
       color:var(--text);
       background:
@@ -61,41 +62,49 @@
       isolation:isolate;
     }
 
+    /* ===== Ribbon (KEEP) ===== */
     .ribbon{
       position:absolute;
       top:18px;
       right:-64px;
       z-index:3;
       transform:rotate(35deg);
-      background:linear-gradient(135deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
+      background:linear-gradient(135deg,
+        rgba(0,229,255,.85),
+        rgba(124,58,237,.80),
+        rgba(255,45,149,.80)
+      );
       color:#071018;
       padding:10px 78px;
       font-weight:950;
       letter-spacing:.4px;
       font-size:.9rem;
-      box-shadow:0 10px 25px rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.25);
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.22);
       user-select:none;
     }
 
+    /* ===== Header (IMAGE 2) ===== */
     header{
       position:relative;
-      padding:54px 44px 40px;
+      padding:64px 44px 54px;  /* breathing room */
       text-align:center;
       color:#fff;
-      background:
-        radial-gradient(900px 420px at 20% 20%, rgba(15,3,229,.26), transparent 60%),
-        radial-gradient(800px 420px at 80% 30%, rgba(3,29,229,.18), transparent 60%),
-        linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-d) 100%);
-      overflow:hidden;
-      border-bottom:4px solid rgba(15,3,229,.45);
-    }
 
+      /* less neon, premium blue */
+      background:
+        radial-gradient(900px 420px at 20% 20%, rgba(15,3,229,.18), transparent 62%),
+        radial-gradient(800px 420px at 80% 30%, rgba(3,29,229,.12), transparent 65%),
+        linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-d) 100%);
+
+      overflow:hidden;
+      border-bottom:2px solid rgba(15,3,229,.28);
+    }
     header::before{
       content:"";
       position:absolute;
       inset:-40% -30%;
-      background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.14), transparent 58%);
+      background:radial-gradient(circle at 30% 20%, rgba(255,255,255,.10), transparent 62%);
       transform:rotate(-8deg);
       pointer-events:none;
     }
@@ -112,21 +121,21 @@
       background-clip:text;
       color:transparent;
       margin-bottom:14px;
+      opacity: .9;
     }
 
     /* =========================
        KITT SCAN (ONLY THE TEXT)
        ========================= */
-
     header .hero-h1{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap: var(--emoji-gap);
-      margin: 0 0 8px;
+      margin: 0 0 10px;
       font-size: clamp(2rem, 2.7vw, 3rem);
-      font-weight: 950;
-      line-height: 1.1;
+      font-weight: 700;
+      line-height: 1.15;
       color:#fff;
       text-shadow:2px 2px 4px rgba(0,0,0,.18);
     }
@@ -142,6 +151,7 @@
       display:inline-block;
       color:#fff;
       padding-left: var(--title-offset);
+      letter-spacing: -0.01em;
     }
 
     header .hero-h1 .kitt-title::after{
@@ -150,6 +160,7 @@
       inset:0;
       pointer-events:none;
 
+      /* Beam */
       background: linear-gradient(
         90deg,
         rgba(255,255,255,0.00) 0%,
@@ -169,14 +180,14 @@
       -webkit-text-fill-color: transparent;
 
       text-shadow:
-        0 0 14px rgba(255,34,68,0.28),
-        0 0 26px rgba(255,42,138,0.18);
+        0 0 14px rgba(255,34,68,0.24),
+        0 0 26px rgba(255,42,138,0.16);
 
       opacity:0.95;
       mix-blend-mode: screen;
     }
 
-    /* LEFT -> RIGHT sweep */
+    /* LEFT → RIGHT sweep */
     @keyframes kittScan{
       0%   { background-position: 160% 50%; }
       100% { background-position: -160% 50%; }
@@ -188,7 +199,7 @@
 
     header h2{
       font-size:clamp(1.15rem,1.6vw,1.5rem);
-      font-weight:750;
+      font-weight:600;
       opacity:.96;
     }
 
@@ -208,25 +219,24 @@
       font-weight:950;
     }
 
+    /* ===== Video section ===== */
     .video-section{
       background:var(--soft);
-      padding:30px 40px;
+      padding:34px 40px 30px;
       border-bottom:3px solid rgba(255,45,149,.55);
     }
-
     .video-placeholder{
       background:
         radial-gradient(900px 420px at 20% 20%, rgba(15,3,229,.22), transparent 60%),
         radial-gradient(800px 420px at 78% 25%, rgba(3,29,229,.16), transparent 62%),
         linear-gradient(135deg, var(--bg-a) 0%, var(--bg-b) 55%, var(--bg-d) 100%);
       color:#fff;
-      padding:60px 40px;
+      padding:52px 40px;
       text-align:center;
       border-radius:12px;
       margin-bottom:16px;
       box-shadow:0 14px 30px rgba(0,0,0,.16);
     }
-
     .video-placeholder h3{
       font-size:clamp(1.5rem,2vw,2.1rem);
       margin-bottom:10px;
@@ -242,7 +252,6 @@
       justify-content:center;
       margin-top:10px;
     }
-
     .btn{
       border:none;
       border-radius:12px;
@@ -253,16 +262,23 @@
       transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
       box-shadow:0 10px 18px rgba(0,0,0,.14);
     }
-
     .btn-primary{
       background:linear-gradient(135deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
       color:#061019;
     }
-
     .btn-primary:hover{
       transform:translateY(-2px);
       filter:brightness(1.02);
       box-shadow:0 14px 24px rgba(0,0,0,.18);
+    }
+    .btn-ghost{
+      background:#fff;
+      color:#0b1220;
+      border:1px solid rgba(15,23,42,.12);
+    }
+    .btn-ghost:hover{
+      transform:translateY(-2px);
+      box-shadow:0 14px 24px rgba(0,0,0,.14);
     }
 
     .content{padding:42px;}
@@ -278,7 +294,6 @@
       align-items:center;
       gap:10px;
     }
-
     h2.section-title::after{
       content:"";
       height:10px;
@@ -305,7 +320,6 @@
       position:relative;
       overflow:hidden;
     }
-
     .intro-box::before{
       content:"";
       position:absolute; inset:-50% -50%;
@@ -313,7 +327,6 @@
       transform:rotate(-8deg);
       pointer-events:none;
     }
-
     .intro-box h2{position:relative;margin-bottom:12px;}
     .intro-box p, .intro-box ul{position:relative;}
     .intro-box ul{margin-top:12px;margin-left:18px;}
@@ -352,7 +365,6 @@
       gap:22px;
       margin:24px 0;
     }
-
     .concept-card{
       background:#fff;
       padding:22px;
@@ -362,7 +374,6 @@
       position:relative;
       overflow:hidden;
     }
-
     .concept-card::before{
       content:"";
       position:absolute; inset:-50% -50%;
@@ -370,7 +381,6 @@
       transform:rotate(-10deg);
       pointer-events:none;
     }
-
     .concept-card h4{position:relative;color:#0b1220;font-size:1.28rem;margin-bottom:10px;}
     .concept-card p, .concept-card ul{position:relative;}
     .icon{position:relative;font-size:2.2rem;margin-bottom:10px;}
@@ -382,7 +392,6 @@
       margin:22px 0;
       border:1px solid rgba(15,23,42,.08);
     }
-
     .workflow-visual{
       display:flex;
       align-items:center;
@@ -391,7 +400,6 @@
       justify-content:center;
       margin:18px 0 8px;
     }
-
     .workflow-step{
       background:linear-gradient(135deg, rgba(0,229,255,.20), rgba(124,58,237,.20), rgba(255,45,149,.18));
       color:#0b1220;
@@ -403,7 +411,6 @@
       box-shadow:0 10px 18px rgba(0,0,0,.10);
       border:1px solid rgba(15,23,42,.08);
     }
-
     .workflow-arrow{font-size:2rem;color:#3b82f6;font-weight:900;}
 
     .table-wrap{
@@ -412,7 +419,6 @@
       box-shadow:0 10px 18px rgba(0,0,0,.07);
       border:1px solid rgba(15,23,42,.08);
     }
-
     table{width:100%;border-collapse:collapse;min-width:760px;background:#fff;}
     thead tr{background:linear-gradient(135deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));color:#061019;}
     th, td{padding:14px;text-align:left;border-bottom:1px solid rgba(0,0,0,.06);}
@@ -452,7 +458,7 @@
 
     .next-steps li{
       padding:6px 0;
-      list-style-position:inside;
+      list-style-position: inside;
     }
 
     footer{
@@ -462,9 +468,7 @@
       text-align:center;
       border-top:1px solid rgba(255,255,255,.10);
     }
-
     footer p{opacity:.95;}
-
     footer .credit{margin-top:10px;font-size:.98rem;opacity:.92;}
     footer .credit strong{
       background:linear-gradient(90deg,var(--dl-cyan),var(--dl-violet),var(--dl-magenta));
@@ -479,11 +483,11 @@
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
-      body{background:#fff;padding:0;}
-      .container{box-shadow:none;}
-      .video-section{display:none;}
-      .ribbon{display:none;}
-      .btn{display:none;}
+      body{ background:#fff; padding:0; }
+      .container{ box-shadow:none; }
+      .video-section{ display:none; }
+      .ribbon{ display:none; }
+      .btn{ display:none; }
 
       header,
       .intro-box,
@@ -504,8 +508,8 @@
       }
 
       .content section:first-of-type{
-        break-before:auto;
-        page-break-before:auto;
+        break-before: auto;
+        page-break-before: auto;
       }
 
       h2, h3{
@@ -516,10 +520,11 @@
 
     @media (max-width:768px){
       .content{padding:28px;}
-      header{padding:46px 22px 34px;}
+      header{padding:54px 22px 44px;}
       .video-section{padding:26px 22px;}
       .workflow-visual{flex-direction:column;}
       .workflow-arrow{transform:rotate(90deg);}
+      header .hero-h1{gap:12px;}
     }
   </style>
 </head>
@@ -548,13 +553,13 @@
 
     <div class="video-section">
       <div class="video-placeholder">
-        <h3>🎥 Watch the Video</h3>
+        <h3>Watch the Video</h3>
         <p>This companion guide is designed to be used alongside the video lesson.</p>
         <p style="margin-top:14px;font-size:.95rem;">Video Duration: ~15 minutes</p>
       </div>
 
       <div class="actions-row">
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print This Guide</button>
+        <button class="btn btn-primary" onclick="window.print()">Print This Guide</button>
       </div>
     </div>
 
@@ -578,6 +583,7 @@
 
       <section id="api-basics">
         <h2 class="section-title">🍽️ What is an API?</h2>
+
         <div class="definition-box">
           <strong>Definition:</strong> An API (Application Programming Interface) exposes a service that developers can consume to interact with an application.
         </div>
@@ -618,6 +624,222 @@
         </p>
       </section>
 
+      <section id="terminology">
+        <h2 class="section-title">🧠 Key Terminology</h2>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="icon">📤</div>
+            <h4>Request</h4>
+            <p>The message you send through the interface to ask the application to do something.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">📥</div>
+            <h4>Response</h4>
+            <p>The message the application returns back through the interface with the result.</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🧑‍💻</div>
+            <h4>Client & Server</h4>
+            <p>You (or n8n) is the client. The API endpoint you call represents the server side.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="http-requests">
+        <h2 class="section-title">🌐 HTTP Requests</h2>
+
+        <p>
+          Most APIs you’ll use in automations are built on HTTP. In n8n, the <strong>HTTP Request</strong> node mirrors these concepts directly.
+        </p>
+
+        <h3>The 4 Components of an HTTP Request</h3>
+
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="icon">🔗</div>
+            <h4>1) URL</h4>
+            <p>The location of the resource you want to access (data, file, page, etc.).</p>
+            <p style="margin-top:10px;color:var(--muted);">
+              Contains a scheme (https), host, path, and optionally port + query parameters.
+            </p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🏷️</div>
+            <h4>2) Method</h4>
+            <p>The action verb for what you want to do.</p>
+            <ul class="basic">
+              <li><strong>GET</strong> — retrieve information</li>
+              <li><strong>POST</strong> — send information</li>
+              <li>Less common: DELETE, PUT, PATCH</li>
+            </ul>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🧾</div>
+            <h4>3) Headers</h4>
+            <p>Extra context about your request (format, device type, language, auth, etc.).</p>
+            <p style="margin-top:10px;color:var(--muted);">
+              Example: <strong>Accept: application/json</strong>
+            </p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">📦</div>
+            <h4>4) Body</h4>
+            <p>The payload you send (usually for POST requests).</p>
+            <p style="margin-top:10px;color:var(--muted);">
+              Example: firstName, lastName, email from a form submission.
+            </p>
+          </div>
+        </div>
+
+        <h3>Credentials & Authentication (Common Patterns)</h3>
+        <p>
+          Most APIs require authentication so only authorized users can read/write data.
+          Credentials can be included in different ways:
+        </p>
+        <ul class="basic">
+          <li><strong>Query parameter:</strong> <code>?api_key=YOUR_KEY</code></li>
+          <li><strong>Header:</strong> <code>Authorization: Bearer YOUR_KEY</code></li>
+          <li><strong>OAuth:</strong> the “Sign in with Google” style authorization flow</li>
+        </ul>
+
+        <div class="key-takeaway">
+          ✅ If you get a 401 error, authentication is the first thing to check.
+        </div>
+      </section>
+
+      <section id="http-responses">
+        <h2 class="section-title">📨 HTTP Responses</h2>
+
+        <h3>The 3 Components of an HTTP Response</h3>
+        <div class="concept-grid">
+          <div class="concept-card">
+            <div class="icon">🔢</div>
+            <h4>1) Status Code</h4>
+            <p>A 3-digit number indicating success or failure.</p>
+            <ul class="basic">
+              <li><strong>200</strong> — OK / success</li>
+              <li><strong>401</strong> — Unauthorized (auth issue)</li>
+              <li><strong>404</strong> — Not found (URL/resource issue)</li>
+              <li><strong>500</strong> — Server error (try again later)</li>
+            </ul>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">🧾</div>
+            <h4>2) Headers</h4>
+            <p>Context about the response (content type, length, caching/expiry, etc.).</p>
+          </div>
+
+          <div class="concept-card">
+            <div class="icon">📄</div>
+            <h4>3) Body</h4>
+            <p>The returned data itself — often JSON, sometimes HTML, or even binary files.</p>
+          </div>
+        </div>
+
+        <div class="key-takeaway">
+          Easy rule: <strong>2xx = success</strong>, <strong>4xx = you need to fix the request</strong>, <strong>5xx = server problem</strong>.
+        </div>
+      </section>
+
+      <section id="webhooks">
+        <h2 class="section-title">🔔 Webhooks (Reverse APIs)</h2>
+
+        <h3>The Doorbell Analogy</h3>
+        <p>
+          If you’re waiting for friends, you can either check the door every few minutes (polling),
+          or you can wait for the doorbell to ring (webhook).
+        </p>
+
+        <div class="workflow-example">
+          <div class="workflow-visual">
+            <div class="workflow-step">Polling</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">“Any new event yet?”</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Repeat (waste + delay)</div>
+          </div>
+
+          <div class="workflow-visual" style="margin-top:18px;">
+            <div class="workflow-step">Webhook</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Event happens</div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">Instant notification</div>
+          </div>
+        </div>
+
+        <h3>Example: Stripe Payments</h3>
+        <p>
+          If you need to know the moment a payment is made, polling would mean repeatedly asking Stripe,
+          “Is there a new payment?” A webhook allows Stripe to notify you immediately when a payment occurs.
+        </p>
+
+        <h3>What You Need to Set Up a Webhook</h3>
+        <ul class="basic">
+          <li>A <strong>URL</strong> — the address where the service will send the webhook data</li>
+          <li>An n8n <strong>Webhook node</strong> — to receive the data and trigger the workflow</li>
+        </ul>
+
+        <div class="key-takeaway">
+          💡 Use webhooks when you want workflows to trigger instantly based on events in another system.
+        </div>
+      </section>
+
+      <section id="quick-reference">
+        <h2 class="section-title">📝 Quick Reference Summary</h2>
+
+        <div class="table-wrap" role="region" aria-label="Quick reference summary table">
+          <table>
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>What it Means</th>
+                <th>Practical Use in n8n</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>API</strong></td>
+                <td>Interface to access application data/services</td>
+                <td>Use app nodes or HTTP Request node</td>
+              </tr>
+              <tr>
+                <td><strong>Documentation</strong></td>
+                <td>Rules for how to call the API</td>
+                <td>Choose endpoint, method, and fields correctly</td>
+              </tr>
+              <tr>
+                <td><strong>HTTP Request</strong></td>
+                <td>URL + Method + Headers + Body</td>
+                <td>Build custom integrations beyond standard nodes</td>
+              </tr>
+              <tr>
+                <td><strong>Status Codes</strong></td>
+                <td>Success/failure signal from server</td>
+                <td>Debug: 2xx OK, 4xx fix request, 5xx retry</td>
+              </tr>
+              <tr>
+                <td><strong>Webhook</strong></td>
+                <td>Event-driven “push” notification</td>
+                <td>Trigger workflows instantly when something happens</td>
+              </tr>
+              <tr>
+                <td><strong>Polling</strong></td>
+                <td>Repeatedly checking for updates</td>
+                <td>Works, but slower and more resource-heavy</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <div class="next-steps" id="next">
         <h3>🚀 Next Steps</h3>
         <p style="font-size:1.1rem;margin-top:10px;">You've completed Video 2!</p>
@@ -636,7 +858,7 @@
         </div>
 
         <div style="margin-top:18px;">
-          <button class="btn btn-primary" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">
+          <button class="btn btn-ghost" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">
             Back to Top ↑
           </button>
         </div>
@@ -648,16 +870,5 @@
       <p class="credit">Special thanks to the collaboration between <strong>DeepLogic AI</strong> and <strong>The AI Skills Forge</strong>.</p>
     </footer>
   </div>
-
-  <script>
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const id = a.getAttribute('href');
-        const el = document.querySelector(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      });
-    });
-  </script>
 </body>
 </html>
